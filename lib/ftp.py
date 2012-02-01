@@ -1,3 +1,9 @@
+#!/usr/bin/python
+# coding: utf-8
+
+from config import *
+import MySQLdb
+
 def select_next_ftp():
 	"""Selects lists of next VHASHs ready for FTP transfer. 
 	   Returns ftp_list, next_ftp_video_list .

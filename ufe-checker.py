@@ -1,12 +1,14 @@
 #!/usr/bin/python
 # coding: utf-8
 
-from lib.config import *
-from lib.functions import *
-from pymediainfo import MediaInfo
+#from lib.config import *
+#from lib.common import *
+from lib.checker import *
+#from lib.functions import *
+#from pymediainfo import MediaInfo
 import time
-import sys
-import hashlib 
+#import sys
+#import hashlib 
 
 # Initialize spawn
 spawn = False 

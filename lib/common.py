@@ -1,3 +1,14 @@
+#!/usr/bin/python
+# coding: utf-8
+
+from config import *
+import MySQLdb
+import time
+import random
+import subprocess
+import syslog
+
+
 def logthis(message) :
         """Writes message to SYSLOG and prints it to STDOUT.
         """

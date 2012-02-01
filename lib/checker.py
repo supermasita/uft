@@ -1,3 +1,14 @@
+#!/usr/bin/python
+# coding: utf-8
+
+from config import *
+from common import *
+import os
+import MySQLdb
+import datetime
+import hashlib
+from pymediainfo import MediaInfo
+
 def select_sites() :
 	"""Selects enabled sites and their incoming paths.
 	   Returns nested list.
@@ -18,8 +29,10 @@ def media_check(site_path, file) :
 	"""Checks a file with Mediainfo, to know if it is a video.
 	   Return isvideo, video_br, video_w, video_h, aspect_r, duration, size
 	"""
+	print "loooo"
 	logthis('Checking with MediaInfo: %s/%s/%s' % (incoming, site_path, file))	
 	media_info = MediaInfo.parse('%s/%s/%s' % (incoming, site_path, file) )
+	print '%s/%s/%s' % (incoming, site_path, file)
 	# check mediainfo tracks
 	for track in media_info.tracks:
 		if track.track_type == 'Video':

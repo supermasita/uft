@@ -6,17 +6,7 @@ import os
 import MySQLdb
 import time
 import datetime
-import random
 import subprocess
-import syslog
-import hashlib
-from pymediainfo import MediaInfo
-
-
-
-
-
-
 
 def select_next_encode():
         """Selects next video to encode.
