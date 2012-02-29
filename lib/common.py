@@ -76,3 +76,15 @@ def spawn_process(process) :
 		logthis('Spawned %s with PID %i' % (process, pid))
 	else:
 		logthis('No process named %s !' % process)
+
+
+def update_vp_quantity(u_quantity, u_vp_status, u_vhash):
+	"""Increments or decrements the total of video profiles with for the vhash on the video_original table.
+	"""
+	status_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+        db=MySQLdb.connect(host=db_host, user=db_user, passwd=db_pass, db=db_database )
+        cursor=db.cursor()
+        cursor.execute("update video_original set %s=%s+(%i), status_time='%s' where vhash='%s';" % (u_vp_status, u_vp_status, u_quantity, status_time, u_vhash) )
+        cursor.close ()
+        db.commit ()
+        db.close ()
