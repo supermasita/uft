@@ -1,10 +1,9 @@
 #!/usr/bin/python
 # coding: utf-8
 
-from lib.config import *
-from lib.functions import *
-import os 
+from lib.encode import *
 
+#
 check_pending=1
 # Loop to find queued videos
 while check_pending==1 :	
@@ -27,6 +26,6 @@ while check_pending==1 :
 			check_pending=0
 		update_running_ps("substract")
 	else :
-		logthis('Max. allowed instances reached. Server : %s' % server_name)
+		logthis('Max. allowed instances reached.')
 		check_pending=0
 

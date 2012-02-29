@@ -2,11 +2,7 @@
 # coding: utf-8
 
 from lib.config import *
-from lib.functions import *
-import os
-import sys
-import ftplib
-import time
+from lib.ftp import *
 
 # Check PID file
 pid = str(os.getpid())

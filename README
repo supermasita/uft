@@ -187,7 +187,7 @@ Many sites can be configured in the same fashion. We will extend this README.
 	# Recycling (cleaning) of UFE
 	* * * * * python /var/www/html/ufe/ufe-recycle_encoded.py > /var/tmp/ufe-recycle_encoded.log 2>&1
 	* * * * * python /var/www/html/ufe/ufe-recycle_original.py > /var/tmp/ufe-recycle_original.log 2>&1
-	* * * * * python /var/www/html/ufe/ufe-remove_old_registers.py >/var/tmp/ufe-remove_old_registers.log 2>&1
+	* * * * * python /var/www/html/ufe/ufe-recycle_old_registers.py >/var/tmp/ufe-remove_old_registers.log 2>&1
 	# Cleans .xml and .err files created by "pymediainfo"
 	* * * * * find /tmp/*.xml -mmin +5 -ls -delete > /var/tmp/ufe-mediainfo_expire_xml.log
 	* * * * * find /tmp/*.err -mmin +5 -ls -delete > /var/tmp/ufe-mediainfo_expire_err.log

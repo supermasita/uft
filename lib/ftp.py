@@ -2,7 +2,11 @@
 # coding: utf-8
 
 from config import *
-import MySQLdb
+from common import *
+
+import ftplib
+import os
+import sys
 
 def select_next_ftp():
 	"""Selects lists of next VHASHs ready for FTP transfer. 

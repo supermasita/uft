@@ -2,6 +2,7 @@
 # coding: utf-8
 
 from config import *
+
 import MySQLdb
 import time
 import random

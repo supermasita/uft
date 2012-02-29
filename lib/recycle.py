@@ -1,3 +1,12 @@
+#!/usr/bin/python
+# coding: utf-8
+
+from config import *
+from common import *
+
+import os
+import shutil
+
 def recycle_old_registers():
         """Removes registers from DB of videos that have already been recycled.
 	"""
