@@ -3,11 +3,16 @@
 
 from config import *
 from common import *
+
 import os
 import MySQLdb
 import time
 import datetime
 import subprocess
+import simplejson
+
+
+
 
 def select_next_encode():
         """Selects next video to encode.
@@ -121,10 +126,55 @@ def encode_video_ffmpeg(e_vhash, e_vpid, e_filename_san, e_encode_file, e_param)
 		update_encode_status(3, e_vhash, e_vpid)
 		update_vp_quantity(-1, 'vp_run', e_vhash)
                 logthis('%s successfully encoded' % e_encode_file)
+		# Try to create JSON file
+		if create_video_json is True :
+			try :
+				create_video_json_file(e_vhash)
+				logthis("JSON file created for %s" % e_vhash)
+			except :
+				pass
         return output
 
 
 
+def create_video_json_file(vhash) :
+	"""Creates JSON file with the encoded videos profile specs. Usefull to create adaptative
+	   video playlists.
+	"""
+	db=MySQLdb.connect(host=db_host, user=db_user, passwd=db_pass, db=db_database )
+	cursor=db.cursor()
+	
+	# Create dictionary with video profiles specs
+	cursor.execute("SELECT vpid, profile_name, bitrate, height, width from video_profile;")
+	video_profiles = {}
+
+	# Loop query result and fill dictionary
+	while (1):
+		result = cursor.fetchone()
+		if result == None: break
+		#
+		video_profiles["%i" % result[0]] = { "profile_name" : result[1],  "bitrate" : "%i" % result[2], "height" : "%i" % result[3], "width" : "%i" % result[4] }
 
 
+
+	# Create dictionary with all the encoded videos of a given vhash
+	cursor.execute("SELECT vpid, encode_file, encode_status, ftp_path from video_encoded where vhash='%s';" % vhash)
+	video_json = {}
+
+	# Loop query result and fill dictionary
+	while (1):
+		result = cursor.fetchone()
+		if result == None: break
+		#
+		video_json[video_profiles["%i" % result[0]]["profile_name"]] = { "file" : result[1], "ftp_path" : result[3], "encode_status" : result[2], "bitrate" : video_profiles["%i" % result[0]]["bitrate"], "height" : video_profiles["%i" % result[0]]["height"], "width" : video_profiles["%i" % result[0]]["width"] }
+
+
+	# Close cursor and DB conn
+	cursor.close ()
+	db.close()
+
+	# Create JSON file
+	video_json_content = simplejson.dumps(video_json, indent=4, sort_keys=True)
+	video_json_file = open("%s%s/%s.json" % (encoded, vhash, vhash), 'w')
+	video_json_file.write(video_json_content)
 

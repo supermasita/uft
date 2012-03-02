@@ -38,7 +38,6 @@ else:
 						# Check metada to know if it si a video
 						isvideo, video_br, video_w, video_h, aspect_r, duration, size = media_check(site_path, file)
 						if isvideo == True :	
-							spawn = True
 							# Video hash 
 							vhash = create_vhash(file, site_name)
 							# Append original filename (with vhash appended) and sanitized filename
@@ -49,6 +48,8 @@ else:
 							move_original_file(root, file, filename_san)
 							create_thumbnail(vhash, filename_san)
 							logthis('%s was added as  %s for %s' % (filename_orig, filename_san, site))
+							#
+							spawn = True
 						else :
                                                         logthis('Couldn\'t add  %s -  Not enough metadata' % file)
 					except:

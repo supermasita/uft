@@ -4,16 +4,16 @@
 from lib.encode import *
 
 #
-check_pending=1
+check_pending = 1
 # Loop to find queued videos
-while check_pending==1 :	
+while check_pending == 1 :	
 	# Test max number of allowed encode instances
 	max_ps_reached = check_running_ps()
-	if max_ps_reached==0 :
+	if max_ps_reached == 0 :
 		update_running_ps("add")
 		# Are there any pending videos?
 		pending_encode = select_next_encode()[0]
-		if pending_encode==1 :
+		if pending_encode == 1 :
 			# Nasty random wait to avoid two servers asking for the same video :S
 			random_wait()
 			# Get data for next encode and process 
@@ -27,5 +27,5 @@ while check_pending==1 :
 		update_running_ps("substract")
 	else :
 		logthis('Max. allowed instances reached.')
-		check_pending=0
+		check_pending = 0
 

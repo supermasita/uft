@@ -101,16 +101,31 @@ else:
 				ftp.mkd(vhash)
 				ftp.cwd(vhash)
 			# 
-			encode_file_name, encode_file_ext = os.path.splitext(encode_file)
-			encode_file_log = "%s.log" % encode_file_name
-			logthis('Uploading  %s/%s/%s/%s/%s' % (year, month, day, vhash, encode_file))
 			# Upload video ...
+			encode_file_name, encode_file_ext = os.path.splitext(encode_file)
+			logthis('Uploading  %s/%s/%s/%s/%s' % (year, month, day, vhash, encode_file))
 			ftp_file = open( '%s%s/%s' % (encoded, vhash, encode_file),'rb')
 			ftp.storbinary('STOR ' + encode_file, ftp_file)
-                        # Upload video log ...
+			logthis('Uploaded  %s/%s/%s/%s/%s' % (year, month, day, vhash, encode_file))
+                        
+			# Upload video log ...
+			encode_file_log = "%s.log" % encode_file_name
+			logthis('Uploading  %s/%s/%s/%s/%s' % (year, month, day, vhash, encode_file_log))
 			ftp_file_log = open( '%s%s/%s' % (encoded, vhash, encode_file_log),'rb')
                         ftp.storbinary('STOR ' + encode_file_log, ftp_file_log)
-			logthis('Uploaded  %s/%s/%s/%s/%s' % (year, month, day, vhash, encode_file))
+			logthis('Uploaded  %s/%s/%s/%s/%s' % (year, month, day, vhash, encode_file_log))
+			
+			# Upload JSON
+			if create_video_json is True :
+				try :
+					encode_file_json = "%s.json" % vhash
+	       	 	                logthis('Uploading  %s/%s/%s/%s/%s' % (year, month, day, vhash, encode_file_json))
+		                        ftp_file_json = open( '%s%s/%s' % (encoded, vhash, encode_file_json),'rb')
+		                        ftp.storbinary('STOR ' + encode_file_json, ftp_file_json)
+	        	                logthis('Uploaded  %s/%s/%s/%s/%s' % (year, month, day, vhash, encode_file_json))
+				except :
+					pass
+
 			# Close FTP 
 			ftp_file.close()
 			# Update status
