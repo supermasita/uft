@@ -104,6 +104,7 @@ def encode_video_ffmpeg(e_vhash, e_vpid, e_filename_san, e_encode_file, e_param)
 	# FFMPEG command
 	command='%s -i %s %s %s' % (ffmpeg_bin, source, e_param, destination)
 	try :
+		logthis("Encode started : %s" % e_encode_file)
 		# Arguments to list in order to use subprocess
         	commandlist=command.split(" ")
         	encode_log_file = open(e_encode_file_log,"wb")
@@ -113,25 +114,25 @@ def encode_video_ffmpeg(e_vhash, e_vpid, e_filename_san, e_encode_file, e_param)
 		pass
         # Check command output
         if output != 0 :
+		logthis("Encode failed : %s" % e_encode_file)
                 update_encode_status(4, e_vhash, e_vpid)
 		update_vp_quantity(-1, 'vp_run', e_vhash)
 		update_vp_quantity(1, 'vp_error', e_vhash)
-		logthis('Error while trying to encode %s' % e_encode_file)
 	else :
                 # We use qt-faststart for hinting
 		command = '%slib/qt-faststart.py "%s"' % (core_root, destination)
 		output = subprocess.call(commandlist)
-		#print "qt outputs %i" % output
 		#
+		logthis("Encode successful : %s" % e_encode_file)
 		update_encode_status(3, e_vhash, e_vpid)
 		update_vp_quantity(-1, 'vp_run', e_vhash)
-                logthis('%s successfully encoded' % e_encode_file)
 		# Try to create JSON file
 		if create_video_json is True :
 			try :
 				create_video_json_file(e_vhash)
-				logthis("JSON file created for %s" % e_vhash)
+				logthis("JSON created : %s" % e_vhash)
 			except :
+				logthis("JSON failed : %s" % e_vhash)
 				pass
         return output
 
