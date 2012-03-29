@@ -101,14 +101,14 @@ else:
 				ftp.mkd(vhash)
 				ftp.cwd(vhash)
 			# 
-			# Upload video ...
+			# Upload video 
 			encode_file_name, encode_file_ext = os.path.splitext(encode_file)
 			logthis('Uploading  %s/%s/%s/%s/%s' % (year, month, day, vhash, encode_file))
 			ftp_file = open( '%s%s/%s' % (encoded, vhash, encode_file),'rb')
 			ftp.storbinary('STOR ' + encode_file, ftp_file)
 			logthis('Uploaded  %s/%s/%s/%s/%s' % (year, month, day, vhash, encode_file))
                         
-			# Upload video log ...
+			# Upload FFMPEG log 
 			encode_file_log = "%s.log" % encode_file_name
 			logthis('Uploading  %s/%s/%s/%s/%s' % (year, month, day, vhash, encode_file_log))
 			ftp_file_log = open( '%s%s/%s' % (encoded, vhash, encode_file_log),'rb')

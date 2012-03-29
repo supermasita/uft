@@ -62,7 +62,7 @@ def update_running_ps(operation):
 	cursor.close ()
         db.commit ()
         db.close ()
-	logthis("%s running_ps" % operation)
+	#logthis("%s running_ps" % operation)
 
 
 def spawn_process(process) :

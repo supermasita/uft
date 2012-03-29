@@ -102,11 +102,12 @@ def encode_video_ffmpeg(e_vhash, e_vpid, e_filename_san, e_encode_file, e_param)
 	e_encode_file_name, e_encode_file_e = os.path.splitext(e_encode_file)
 	e_encode_file_log = "%s%s/%s.log" % (encoded, e_vhash, e_encode_file_name)
 	# FFMPEG command
-	command='%s -i %s %s %s' % (ffmpeg_bin, source, e_param, destination)
+	#command='%s -i %s %s %s' % (ffmpeg_bin, source, e_param, destination)
 	try :
 		logthis("Encode started : %s" % e_encode_file)
-		# Arguments to list in order to use subprocess
-        	commandlist=command.split(" ")
+		# FFMPEG - Arguments to list in order to use subprocess
+		command='%s -i %s %s %s' % (ffmpeg_bin, source, e_param, destination)
+		commandlist=command.split(" ")
         	encode_log_file = open(e_encode_file_log,"wb")
 		output = subprocess.call(commandlist, stderr=encode_log_file, stdout=encode_log_file)
 	except :
@@ -119,13 +120,15 @@ def encode_video_ffmpeg(e_vhash, e_vpid, e_filename_san, e_encode_file, e_param)
 		update_vp_quantity(-1, 'vp_run', e_vhash)
 		update_vp_quantity(1, 'vp_error', e_vhash)
 	else :
-                # We use qt-faststart for hinting
-                command = '%slib/qt-faststart.py %s' % (core_root, destination)
-                commandlist=command.split(" ")
-                qt_log_file = open("%s%s/%s.qt.log" % (encoded, e_vhash, e_encode_file_name), "wb")
-                output = subprocess.call(commandlist, stderr=qt_log_file, stdout=qt_log_file)
-		#
 		logthis("Encode successful : %s" % e_encode_file)
+		logthis("Hinting started : %s" % e_encode_file)
+                # We use qt-faststart for hinting
+                qt_command = '%slib/qt-faststart.py %s' % (core_root, destination)
+                qt_commandlist = qt_command.split(" ")
+		qt_log_file = open("%s%s/%s.qt.log" % (encoded, e_vhash, e_encode_file_name), "wb")
+		qt_output = subprocess.call(qt_commandlist, stderr=qt_log_file, stdout=qt_log_file)
+		#
+		logthis("Hinting successful : %s" % e_encode_file)
 		update_encode_status(3, e_vhash, e_vpid)
 		update_vp_quantity(-1, 'vp_run', e_vhash)
 		# Try to create JSON file
@@ -180,4 +183,33 @@ def create_video_json_file(vhash) :
 	video_json_content = simplejson.dumps(video_json, indent=4, sort_keys=True)
 	video_json_file = open("%s%s/%s.json" % (encoded, vhash, vhash), 'w')
 	video_json_file.write(video_json_content)
+
+
+def check_and_encode() :
+	"""Checks for pending videos and encodes them.
+	"""
+	check_pending = 1
+	# Loop to find queued videos
+	while check_pending == 1 :
+		# Test max number of allowed encode instances
+		max_ps_reached = check_running_ps()
+		if max_ps_reached == 0 :
+			update_running_ps("add")
+			# Are there any pending videos?
+			pending_encode = select_next_encode()[0]
+			if pending_encode == 1 :
+				# Nasty random wait to avoid two servers asking for the same video :S
+				random_wait()
+				# Get data for next encode and process 
+				pending_encode, vhash, vpid, encode_status, filename_san, encode_file, param = select_next_encode()
+				encode_video_ffmpeg(vhash, vpid, filename_san, encode_file, param)
+				# Spawn ftp.py
+				spawn_process("ftp")
+			else :
+				print "No videos left to encode."
+				check_pending=0
+			update_running_ps("substract")
+		else :
+			logthis('Max. allowed instances reached.')
+			check_pending = 0
 
