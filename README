@@ -78,7 +78,7 @@ will always be as simple as possible.
 	* Maximum number of FFMPEG processes may be configured for each encoder
 	  (default: 2).
 	* Non-blocking queues won't let a huge video consume all your processes
-	  all leave all other waiting.
+	  and leave all other waiting.
 	* Logging in syslog.
 	* Per video FFMPEG log.
 	* Video hinting.

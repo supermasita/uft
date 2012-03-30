@@ -13,7 +13,7 @@ import syslog
 def logthis(message) :
         """Writes message to SYSLOG and prints it to STDOUT.
         """
-        syslog.syslog(syslog.LOG_INFO, '%s' % message )
+        syslog.syslog(syslog.LOG_INFO, 'UFE | %s' % message )
         print "%s" % message
 
 
@@ -62,7 +62,7 @@ def update_running_ps(operation):
 	cursor.close ()
         db.commit ()
         db.close ()
-
+	#logthis("%s running_ps" % operation)
 
 
 def spawn_process(process) :

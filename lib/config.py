@@ -28,3 +28,5 @@ db_database = "ufe"
 # Absolute name of binaries
 ffmpeg_bin = "/usr/bin/ffmpeg"
 
+# Create JSON? (True or False)
+create_video_json = True
