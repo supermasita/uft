@@ -1,0 +1,6 @@
+# compiled python
+*.pyc
+
+# video folders
+video_encoded
+video_original
