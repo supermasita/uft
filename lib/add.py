@@ -37,7 +37,7 @@ def get_site(site_name) :
 		site_id = result[1]
 		site_enabled = result[2]
 		site_incoming_path = result[3]
-	print site_name, site_id, site_enabled, site_incoming_path
+	return site_name, site_id, site_enabled, site_incoming_path
 
 
 def media_check(file) :
@@ -61,12 +61,127 @@ def media_check(file) :
                 isvideo = True
         else :
                 isvideo, video_br, video_w, video_h, aspect_r, duration, size = False
-        print isvideo, video_br, video_w, video_h, aspect_r, duration, size
+	return isvideo, video_br, video_w, video_h, aspect_r, duration, size
+
+
+def create_vhash(c_file, c_site_name) :
+        """Creates hash for video from filename and site name.
+           Returns vhash (string).
+        """
+        vhash_full=hashlib.sha1(str(time.time())+c_file+server_name+c_site_name).hexdigest()
+        vhash=vhash_full[:10]
+        return vhash
+
+def create_filename_san(file, vhash) :
+        """Creates a sanitized and timestamped filename from the original filename.
+           Returns filename_san (string) and filename_orig (string).
+        """
+        filename_orig_n, filename_orig_e = os.path.splitext(file)
+        filename_orig = "%s-%s%s" % (filename_orig_n, vhash, filename_orig_e)
+        # sanitize filename
+        filename_san = filename_orig_n.decode("utf-8").lower()
+        sanitize_list = [' ', 'ñ', '(', ')', '[', ']', '{', '}', 'á', 'é', 'í', 'ó', 'ú', '?', '¿', '!', '¡']
+        for item in sanitize_list :
+                filename_san = filename_san.replace(item.decode("utf-8"), '_')
+        filename_san = "%s-%s%s" % (filename_san, vhash, filename_orig_e)
+        return filename_san, filename_orig
+
+
+def create_video_registry(c_vhash, c_filename_orig, c_filename_san, c_video_br, c_video_w, c_video_h, c_aspect_r, c_duration, c_size, c_site_id, c_server_name ):
+	"""Creates registry in table VIDEO_ORIGINAL. 
+	   Creates registries in table VIDEO_ENCODED according to the video profiles that match the original video. 
+	"""
+	t_created = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+	db=MySQLdb.connect(host=db_host, user=db_user, passwd=db_pass, db=db_database )
+	cursor=db.cursor()
+	# Insert original video registry
+	cursor.execute("insert into video_original set vhash='%s', filename_orig='%s', filename_san='%s', video_br=%i, video_w=%i, video_h=%i, aspect_r=%f, t_created='%s', duration=%i, size=%i, site_id=%i, server_name='%s';" % (c_vhash, c_filename_orig, c_filename_san, c_video_br, c_video_w, c_video_h, c_aspect_r, t_created, c_duration, c_size, c_site_id, c_server_name ) )
+	db.commit()
+	# Check profiles enabled for the site - NULL will use all profiles enabled globally
+	cursor.execute("select vp_enabled from sites where id=%i;" % c_site_id )
+	vp_enabled=cursor.fetchall()[0]
+	# Check the aspect ratio of the video and choose profiles?
+	aspect_split=1.6
+	aspect_wide=1.77
+	aspect_square=1.33
+	if c_aspect_r <= aspect_split :
+		if vp_enabled[0] is None :
+                	cursor.execute("select vpid, profile_name, bitrate, width from video_profile where %i>=min_width and round(aspect_r,2)=%f and enabled='1';" % (c_video_w, aspect_square))
+                	resultado=cursor.fetchall()
+        	else :
+                	cursor.execute("select vpid, profile_name, bitrate, width from video_profile where %i>=min_width and round(aspect_r,2)=%f and enabled='1' and vpid in (%s);" % (c_video_w, aspect_square, vp_enabled[0]) )
+                	resultado=cursor.fetchall()
+	elif c_aspect_r > aspect_split :
+                if vp_enabled[0] is None :
+                        cursor.execute("select vpid, profile_name, bitrate, width from video_profile where %i>=min_width and round(aspect_r,2)=%f and enabled='1';" % (c_video_w, aspect_wide))
+			resultado=cursor.fetchall()
+                else :
+                        cursor.execute("select vpid, profile_name, bitrate, width from video_profile where %i>=min_width and round(aspect_r,2)=%f and enabled='1' and vpid in (%s);" % (c_video_w, aspect_wide, vp_enabled[0]) )
+			resultado=cursor.fetchall()
+	# We create a registry for each video profile
+	vp_total=0
+	for registro in resultado :
+		vpid = registro[0]
+		profile_name = registro[1]
+		bitrate = registro[2]
+		width = registro[3]
+		# Create filename for the encoded video, according to video profile
+		filename_san_n, nombre_orig_e = os.path.splitext(c_filename_san)
+		encode_file = "%s-%s.mp4" % (filename_san_n, profile_name)
+		# We assign an integer based on specifications of the original video and the video profile
+		# in order identify which videos will be more resource intense
+		weight=int((c_duration*(float(bitrate)/float(width)))/10)
+		# Timestamp                             
+		t_created = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+		# Path used in FTP - we will use the date
+                year = time.strftime("%Y", time.localtime())
+                month = time.strftime("%m", time.localtime())
+                day = time.strftime("%d", time.localtime())
+		c_ftp_path="%s/%s/%s" % (year, month, day)
+		# We insert registrys for each video profile
+                cursor.execute("insert into video_encoded set vhash='%s', vpid=%i, encode_file='%s', t_created='%s', weight=%i, ftp_path='%s', site_id=%i, server_name='%s';" % (c_vhash, vpid, encode_file, t_created, weight, c_ftp_path, c_site_id, c_server_name) )
+		db.commit ()
+		logthis('Registry added for %s' % encode_file)	
+		# We add 1 to the total quantity of profiles for video
+		vp_total=vp_total+1
+        # Update the total quantity of profiles for video
+	cursor.execute("update video_original set vp_total=%i where vhash='%s';" % (vp_total, c_vhash) )
+	db.commit ()
+	cursor.close ()
+	db.close ()
 
 
 
 
 
-get_site('default')
 
-media_check('/var/tmp/01.flv')
+
+
+############################################################################################################
+site_name = sys.argv[1]
+file =	sys.argv[2]
+
+site_name, site_id, site_enabled, site_incoming_path = get_site(site_name)
+
+
+# Check metada to know if it si a video
+isvideo, video_br, video_w, video_h, aspect_r, duration, size = media_check(file)
+if isvideo == True :
+	# Video hash 
+	vhash = create_vhash(file, site_name)
+	# Append original filename (with vhash appended) and sanitized filename
+	filename_san, filename_orig = create_filename_san(file, vhash)
+	# Insert registers in DB
+	create_video_registry(vhash, filename_orig, filename_san, video_br, video_w, video_h, aspect_r, duration, size, site_id, server_name)
+	# Move file and create thumbnail blob
+	#move_original_file(root, file, filename_san)
+	#create_thumbnail(vhash, filename_san)
+	logthis('%s was added as  %s for %s' % (filename_orig, filename_san, site_name))
+	#
+	spawn = True
+else :
+	logthis('Couldn\'t add  %s -  Not enough metadata' % file)
+
+
+
+print vhash, filename_orig, filename_san, video_br, video_w, video_h, aspect_r, duration, size, site_id, server_name

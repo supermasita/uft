@@ -4,3 +4,6 @@
 # video folders
 video_encoded
 video_original
+
+# vim swp
+*.swp
