@@ -11,7 +11,7 @@ import hashlib
 import time
 import sys
 from pymediainfo import MediaInfo
-
+import simplejson
 
 """
 Brainstorming ...
@@ -60,7 +60,7 @@ def media_check(file) :
         if vars().has_key('video_br') and vars().has_key('video_w'):
                 isvideo = True
         else :
-                isvideo, video_br, video_w, video_h, aspect_r, duration, size = False
+               isvideo, video_br, video_w, video_h, aspect_r, duration, size = False
 	return isvideo, video_br, video_w, video_h, aspect_r, duration, size
 
 
@@ -150,8 +150,42 @@ def create_video_registry(c_vhash, c_filename_orig, c_filename_san, c_video_br, 
 	cursor.close ()
 	db.close ()
 
+def move_original_file(root, file, filename_san) :
+        """Moves original video file from video_origin folder to video_original folder.
+        """
+        os.rename(os.path.join(root,file), original+filename_san)
 
 
+
+def create_thumbnail(vhash, filename_san) :
+        """Creates thumbail (80x60px) from original video and stores it video original db table as a blob.
+           Thumbnail is taken at 00:00:02 of the video.
+        """
+        filename_san_n, filename_san_e = os.path.splitext(filename_san)
+        source = "%s/%s" % (original, filename_san)
+        destination = "%s/%s.jpg" % (original, filename_san_n)
+        command = '%s -itsoffset -2 -i %s -vcodec mjpeg -vframes 1 -an -f rawvideo -s 80x60 %s -y' % (ffmpeg_bin, source, destination)
+        try :
+                commandlist = command.split(" ")
+                output = subprocess.call(commandlist, stdout=open('/dev/null', 'w'), stderr=subprocess.STDOUT)
+		#output = subprocess.call(commandlist)
+        except :
+                output = 1
+                pass
+
+        if output == 0 :
+                # Insert into blob
+                thumbnail = open(destination, 'rb')
+                thumbnail_blob = repr(thumbnail.read())
+                thumbnail.close()
+                db = MySQLdb.connect(host=db_host, user=db_user, passwd=db_pass, db=db_database )
+                cursor = db.cursor()
+                cursor.execute("UPDATE video_original SET thumbnail_blob='%s' WHERE vhash='%s';" % (MySQLdb.escape_string(thumbnail_blob), vhash) )
+                cursor.close()
+                db.commit()
+                db.close()
+                # Remove thumbnail file
+                os.unlink(destination)
 
 
 
@@ -159,29 +193,37 @@ def create_video_registry(c_vhash, c_filename_orig, c_filename_san, c_video_br, 
 
 ############################################################################################################
 site_name = sys.argv[1]
-file =	sys.argv[2]
+file_full_path = sys.argv[2]
+file_name_only = file_full_path.split("/")[-1]
+file_path_only = "/".join(file_full_path.split("/")[:-1])+"/"
 
+#print site_name
+#print file_full_path
+#print file_name_only
+#print file_path_only
+
+
+# Tell me something about the site
 site_name, site_id, site_enabled, site_incoming_path = get_site(site_name)
 
-
-# Check metada to know if it si a video
-isvideo, video_br, video_w, video_h, aspect_r, duration, size = media_check(file)
+# Check metada to know if its a video
+isvideo, video_br, video_w, video_h, aspect_r, duration, size = media_check(file_full_path)
 if isvideo == True :
 	# Video hash 
-	vhash = create_vhash(file, site_name)
+	vhash = create_vhash(file_name_only, site_name)
 	# Append original filename (with vhash appended) and sanitized filename
-	filename_san, filename_orig = create_filename_san(file, vhash)
+	filename_san, filename_orig = create_filename_san(file_name_only, vhash)
 	# Insert registers in DB
 	create_video_registry(vhash, filename_orig, filename_san, video_br, video_w, video_h, aspect_r, duration, size, site_id, server_name)
 	# Move file and create thumbnail blob
-	#move_original_file(root, file, filename_san)
-	#create_thumbnail(vhash, filename_san)
+	move_original_file(file_path_only, file_name_only, filename_san)
+	create_thumbnail(vhash, filename_san)
 	logthis('%s was added as  %s for %s' % (filename_orig, filename_san, site_name))
+	video_json = { "vhash":vhash, "filename_orig":filename_orig, "filename_san":filename_san, "video_br":video_br, "video_w":video_w, "video_h":video_h, "apspect_r":aspect_r, "duration":duration, "size":size, "site_id":site_id, "server_name":server_name }	
+	print simplejson.dumps(video_json, indent=4, sort_keys=True)
 	#
 	spawn = True
 else :
 	logthis('Couldn\'t add  %s -  Not enough metadata' % file)
 
 
-
-print vhash, filename_orig, filename_san, video_br, video_w, video_h, aspect_r, duration, size, site_id, server_name
