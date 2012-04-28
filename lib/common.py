@@ -10,12 +10,13 @@ import subprocess
 import syslog
 
 
-def logthis(message) :
-        """Writes message to SYSLOG and prints it to STDOUT.
+def logthis(message, out=0) :
+        """Writes message to SYSLOG and prints it to STDOUT, if u want.
         """
         syslog.syslog(syslog.LOG_INFO, 'UFE | %s' % message )
-        print "%s" % message
-
+        if out==1 :
+		print "%s" % message
+	
 
 def random_wait() :
 	"""Random wait (ms).
