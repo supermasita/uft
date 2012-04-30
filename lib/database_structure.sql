@@ -44,7 +44,7 @@ SET character_set_client = @saved_cs_client;
 
 LOCK TABLES `servers` WRITE;
 /*!40000 ALTER TABLE `servers` DISABLE KEYS */;
-INSERT INTO `servers` VALUES (1,'encoder01','encoder',1,'127.0.0.1',1,0,0,2);
+INSERT INTO `servers` VALUES (1,'encoder01','encoder',1,'127.0.0.1',1,0,1,2);
 /*!40000 ALTER TABLE `servers` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -60,13 +60,14 @@ CREATE TABLE `sites` (
   `name` varchar(45) NOT NULL,
   `enabled` int(1) NOT NULL default '0',
   `site_url` varchar(45) default NULL,
-  `incoming_path` varchar(45) NOT NULL,
+  `local_folder` varchar(45) NOT NULL,
+  `ftp_enabled` varchar(45) NOT NULL default '0',
   `ftp_user` varchar(45) default NULL,
   `ftp_pass` varchar(45) default NULL,
   `ftp_host` varchar(45) default NULL,
   `vp_default` int(2) NOT NULL,
   `vp_enabled` varchar(45) default NULL,
-  PRIMARY KEY  (`name`,`id`),
+  PRIMARY KEY  (`id`,`name`),
   UNIQUE KEY `name_UNIQUE` (`name`),
   UNIQUE KEY `id_UNIQUE` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -78,7 +79,7 @@ SET character_set_client = @saved_cs_client;
 
 LOCK TABLES `sites` WRITE;
 /*!40000 ALTER TABLE `sites` DISABLE KEYS */;
-INSERT INTO `sites` VALUES (1,'default',1,'','default','ufe','ufepassword','127.0.0.1',0,NULL);
+INSERT INTO `sites` VALUES (1,'default',1,'','','0','ufe','ufepassword','127.0.0.1',0,NULL);
 /*!40000 ALTER TABLE `sites` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -207,4 +208,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2012-01-20  4:20:07
+-- Dump completed on 2012-04-30 23:26:28
