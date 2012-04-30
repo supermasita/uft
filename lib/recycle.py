@@ -29,37 +29,44 @@ def recycle_old_registers():
 		print "There are no old registers to delete."
         db.close ()
 
+
 def select_next_original_recycle():
-	"""Finds original videos whose encoded videos have been already recycled and deletes them.
-	"""
+        """Finds original videos whose encoded videos have been already recycled and deletes them.
+        """
         db=MySQLdb.connect(host=db_host, user=db_user, passwd=db_pass, db=db_database )
         cursor=db.cursor()
-        cursor.execute("select vhash, filename_san, vp_total from video_original where vp_total=vp_done and recycle_status=1 and server_name='%s' order by 1 limit 10;" % server_name )
+        cursor.execute("select vhash, filename_san from video_original where recycle_status=1 and server_name='%s' and status_time<DATE_SUB(CURRENT_TIMESTAMP, INTERVAL 15 MINUTE);" % server_name )
         results=cursor.fetchall()
-	pending_video_list = list()
-	lista_vhash = list()	
-	pending_original_recycle=0
-	for registry in results:
-		vhash = registry[0]
-		filename_san = registry[1]
-		vp_total = registry[2]
-		lista_vhash.append([vhash, filename_san])
-	if vars().has_key('vhash') :	
-		for registry in lista_vhash :			
-			lvhash = registry[0]
-			lfilename_san = registry[1]
-			cursor.execute("select count(*) from video_encoded where vhash='%s' and recycle_status=3;" % lvhash )
-			results2=cursor.fetchall()
-			if vp_total==results2[0][0] :
+        pending_video_list = list()
+        lista_vhash = list()
+        pending_original_recycle=0
+        for registry in results:
+                vhash = registry[0]
+                filename_san = registry[1]
+                lista_vhash.append([vhash, filename_san])
+        if vars().has_key('vhash') :
+                for registry in lista_vhash :
+                        lvhash = registry[0]
+                        lfilename_san = registry[1]
+			# all encoded videos for vhash
+			cursor.execute("select count(*) from video_encoded where vhash='%s';" % lvhash )
+			result_total = cursor.fetchall()
+			# recycled encoded videos for vhash
+                        cursor.execute("select count(*) from video_encoded where vhash='%s' and recycle_status=3;" % lvhash )
+                        result_recycled = cursor.fetchall()
+			# compare
+                        if result_total[0][0] == result_recycled[0][0] :
 				pending_video = [lvhash, lfilename_san]
-				pending_video_list.append(pending_video)
-				pending_original_recycle=1	
+                                pending_video_list.append(pending_video)
+                                pending_original_recycle=1
+        		else :
+				pending_original_recycle = pending_video_list = 0
 	else :
-        	pending_original_recycle = pending_video_list = 0
-	cursor.close ()
+                pending_original_recycle = pending_video_list = 0
+
+        cursor.close ()
         db.close ()
 	return pending_original_recycle, pending_video_list
-
 
 def update_encoded_recycle_status(state, u_vhash, u_vpid):
 	"""Updates the recycled status of a encoded video.
@@ -90,7 +97,7 @@ def select_next_encoded_recycle():
 	"""
         db=MySQLdb.connect(host=db_host, user=db_user, passwd=db_pass, db=db_database )
         cursor=db.cursor()
-        cursor.execute("select t_created, vhash, encode_time, vpid, encode_file from video_encoded where recycle_status=1 and ftp_status=3 and encode_status=3 and ftp_time < DATE_SUB(current_timestamp(), INTERVAL 30 MINUTE) and server_name='%s' order by 1 limit 1;" % server_name )
+        cursor.execute("select t_created, vhash, encode_time, vpid, encode_file from video_encoded where recycle_status=1 and ftp_status=3 and encode_status=3 and ftp_time < DATE_SUB(current_timestamp(), INTERVAL 15 MINUTE) and server_name='%s' order by 1 limit 1;" % server_name )
         results=cursor.fetchall()
         for registry in results:
                 t_created = registry[0]
@@ -106,9 +113,5 @@ def select_next_encoded_recycle():
                 return pending_encoded_recycle, t_created, vhash, encode_time, vpid, encode_file
         cursor.close ()
         db.close ()
-
-
-
-
 
 
