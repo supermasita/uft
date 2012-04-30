@@ -99,7 +99,8 @@ will always be as simple as possible.
 
 	* Alejandro Ferrari - Sysadmin and Wowza expert 
 	* Supermasita - Python coder wannabe 
-
+        * "Pymediainfo" (https://github.com/paltman/pymediainfo)
+        * "qt-faststart" (https://github.com/danielgtaylor/qtfaststart)
 
 -------------------------------------------------------------------------------
 
@@ -113,8 +114,6 @@ doubt about installation.
 	* "FFMPEG" (http://ffmpeg.org/) (if using RHEL best install it from 
 	http://atrpms.net/)
 	* "Medianfo CLI" (http://mediainfo.sourceforge.net/)
-	* "Pymediainfo" (https://github.com/paltman/pymediainfo)
-	* "qt-faststart" (https://github.com/danielgtaylor/qtfaststart)
 
 
 2.2 Creating directories
@@ -122,19 +121,14 @@ doubt about installation.
 	1- Create a directory for the scripts (ex: /var/www/html/ufe/), where you will
 	do the "git clone" or untar.
 	2- Inside this directory create the following ones :
-		* "video_origin" : were UFE retrieves videos for encoding.
-		* "video_original" : where UFE temporaly moves videos retrieved 
-		  from "video_origin".
+		* "video_original" : where UFE temporaly moves original videos.
 		* "video_encoded" : where UFE temporaly stores encoded videos.
-	3- Inside "video_origin" directory, create another directory called 
-	   "default". Here you could create the origin directories for as many 
-	   sites as you want to define.
 
 
 2.3 Creating database
 	
 	1- Create a database called "ufe" (or whatever you like).
-	2- Create a user ("ufe"?) and grants to use the database.
+	2- Create a user ("ufe") and grants to use the database.
 	3- Use the dump located in "lib" to create the tables, like this
 	   (from command line):
    	   
@@ -164,7 +158,6 @@ Many sites can be configured in the same fashion. We will extend this README.
 	2- Modify the file "lib/config.py", changing the following variables
 	   with your data (examples are provided in the file):
 		* core_root 
-		* incoming
 		* original
 		* encoded
 		* tmppath
@@ -180,18 +173,18 @@ Many sites can be configured in the same fashion. We will extend this README.
 	You will need the following crons running (change accordingly to your
 	needs and setup):
 
-	# Main scripts
-	* * * * * python /var/www/html/ufe/ufe-checker.py > /var/tmp/ufe-checker.log 2>&1
+	# UFE : MAIN
+	* * * * * python /var/www/html/ufe/ufe-add.py -a dir -s default -f /var/tmp/videos/ > /var/tmp/ufe-add.log 2>&1
 	* * * * * python /var/www/html/ufe/ufe-encode.py > /var/tmp/ufe-encode.log 2>&1
 	* * * * * python /var/www/html/ufe/ufe-ftp.py > /var/tmp/ufe-ftp.log 2>&1
-	# Recycling (cleaning) of UFE
-	* * * * * python /var/www/html/ufe/ufe-recycle_encoded.py > /var/tmp/ufe-recycle_encoded.log 2>&1
-	* * * * * python /var/www/html/ufe/ufe-recycle_original.py > /var/tmp/ufe-recycle_original.log 2>&1
-	* * * * * python /var/www/html/ufe/ufe-recycle_old_registers.py >/var/tmp/ufe-remove_old_registers.log 2>&1
-	# Cleans .xml and .err files created by "pymediainfo"
-	* * * * * find /tmp/*.xml -mmin +5 -ls -delete > /var/tmp/ufe-mediainfo_expire_xml.log
-	* * * * * find /tmp/*.err -mmin +5 -ls -delete > /var/tmp/ufe-mediainfo_expire_err.log
-
+	# UFE : RECYCLING
+	* * * * * python /var/www/html/ufe/ufe-recycle.py -r encoded > /var/tmp/ufe-recycle_encoded.log 2>&1
+	* * * * * python /var/www/html/ufe/ufe-recycle.py -r original > /var/tmp/ufe-recycle_original.log 2>&1
+	* * * * * python /var/www/html/ufe/ufe-recycle.py -r registers >/var/tmp/ufe-recycle_registers.log 2>&1
+	# UFE : Cleans .xml and .err files created by "pymediainfo"
+	* * * * * find /tmp/*.xml -mmin +5 -ls -delete > /var/tmp/ufe-mediainfo_expire_xml.log 2>&1
+	* * * * * find /tmp/*.err -mmin +5 -ls -delete > /var/tmp/ufe-mediainfo_expire_err.log 2>&1
+	
 	(!) Contact us if you want to use inotify to monitor last access of
 	    files with INCRON: 
 	    (http://inotify.aiken.cz/?section=incron&page=why&lang=en)
@@ -202,12 +195,17 @@ Many sites can be configured in the same fashion. We will extend this README.
 
 3.1 Encoding workflow
 	
-	* We assume that a video "test.flv" has been copied inside the 
-	directory "video_original/default".
-
 	* "ufe-checker" will scan the directory and if it finds that the file
 	has not been modified in a given time period (defined in "config.py") 
 	and continue.
+
+	* Using "ufe-add" you will add videos for encoding in two different ways:
+		1- Adding an specific file. 
+		   (ex: ufe-add.py -a file -s default -f /var/tmp/videos/lalala.avi)
+		2- Adding all videos in a directory.
+		   (ex: ufe-add.py -a dir -s default -f /var/tmp/videos/)
+		   The directory will be scanned and only files update before a 
+		   given time period (defined in "config.py") will be added.
 
 	* "Mediainfo" will be used to read the video metadata. The file will be
 	move to "video_original" folder and a register in "video_original" 
@@ -222,17 +220,11 @@ Many sites can be configured in the same fashion. We will extend this README.
 	* After each encoding, "ufe-ftp" is spawned and any pending upload
 	video is uploaded. 
 
-	* "ufe-recycle_encoded" will erase encoded videos that have already 
-	been successfully uploaded, in other to free space.
-
-	* "ufe-recycle_original" will erase original videos, whose encoded
-	videos have been already recycled.
-
-	* "ufe-recyle_old_registers" will erase registers for those videos
-	whose encoded and original videos have been recycled more than 
-	48 hours ago.
- 
-
+	* "ufe-recycle" will erase :
+		* encoded videos that have already been successfully uploaded.
+		* original videos, whose encoded videos have been already recycled.
+		* registers for those videos whose encoded and original videos have 
+		  been recycled.
 
 3.1.1 Checker (to do)
 
