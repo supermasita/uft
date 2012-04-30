@@ -12,6 +12,8 @@ import hashlib
 import time
 import sys
 import simplejson
+import getopt
+
 
 """
 Brainstorming ...
@@ -168,7 +170,6 @@ def create_thumbnail(vhash, filename_san) :
         try :
                 commandlist = command.split(" ")
                 output = subprocess.call(commandlist, stdout=open('/dev/null', 'w'), stderr=subprocess.STDOUT)
-		#output = subprocess.call(commandlist)
         except :
                 output = 1
                 pass
@@ -188,34 +189,67 @@ def create_thumbnail(vhash, filename_san) :
                 os.unlink(destination)
 
 
+def ufe_add_usage():
+        """Prints the usage of "ufe-add".
+        """
+        print """
+        Usage example : 
+        
+        ufe-add.py -a add -s default -f /var/tmp/lalala.avi
+        
+        -a      Action 
+        -s      Name of the site 
+        -f      Full path filename
+        """
 
-############################################################################################################
-site_name = sys.argv[1]
-file_full_path = sys.argv[2]
-file_name_only = file_full_path.split("/")[-1]
-file_path_only = "/".join(file_full_path.split("/")[:-1])+"/"
 
-# Tell me something about the site
-site_name, site_id, site_enabled, site_incoming_path = get_site(site_name)
 
-# Check metada to know if its a video
-isvideo, video_br, video_w, video_h, aspect_r, duration, size = media_check(file_full_path)
-if isvideo == True :
-	# Video hash 
-	vhash = create_vhash(file_name_only, site_name)
-	# Append original filename (with vhash appended) and sanitized filename
-	filename_san, filename_orig = create_filename_san(file_name_only, vhash)
-	# Insert registers in DB
-	create_video_registry(vhash, filename_orig, filename_san, video_br, video_w, video_h, aspect_r, duration, size, site_id, server_name)
-	# Move file and create thumbnail blob
-	move_original_file(file_path_only, file_name_only, filename_san)
-	create_thumbnail(vhash, filename_san)
-	logthis('%s was added as  %s for %s' % (filename_orig, filename_san, site_name))
-	video_json = { "vhash":vhash, "filename_orig":filename_orig, "filename_san":filename_san, "video_br":video_br, "video_w":video_w, "video_h":video_h, "aspect_r":round(aspect_r, 2), "duration":duration, "size":size, "site_id":site_id, "server_name":server_name }	
-	print simplejson.dumps(video_json, indent=4, sort_keys=True)
-	#
-	spawn = True
+
+# Get parameters
+argv = sys.argv[1:]
+
+try :
+        opts, args = getopt.getopt(argv, "a:s:f:")
+except :
+        ufe_add_usage()
+        sys.exit(2)
+
+# Assign parameters as variables
+for opt, arg in opts :
+        if opt == "-a" :
+                action = arg
+        elif opt == "-s" :
+                site_name = arg
+        elif opt == "-f" :
+                file_full_path = arg
+
+# Check if all needed variables are set
+if vars().has_key('action') and vars().has_key('site_name') and vars().has_key('file_full_path') :
+	#        
+	file_name_only = file_full_path.split("/")[-1]
+	file_path_only = "/".join(file_full_path.split("/")[:-1])+"/"
+	# Tell me something about the site
+	site_name, site_id, site_enabled, site_incoming_path = get_site(site_name)
+	# Check metada to know if its a video
+	isvideo, video_br, video_w, video_h, aspect_r, duration, size = media_check(file_full_path)
+	if isvideo == True :
+		# Video hash 
+		vhash = create_vhash(file_name_only, site_name)
+		# Append original filename (with vhash appended) and sanitized filename
+		filename_san, filename_orig = create_filename_san(file_name_only, vhash)
+		# Insert registers in DB
+		create_video_registry(vhash, filename_orig, filename_san, video_br, video_w, video_h, aspect_r, duration, size, site_id, server_name)
+		# Move file and create thumbnail blob
+		move_original_file(file_path_only, file_name_only, filename_san)
+		create_thumbnail(vhash, filename_san)
+		logthis('%s was added as  %s for %s' % (filename_orig, filename_san, site_name))
+		video_json = { "vhash":vhash, "filename_orig":filename_orig, "filename_san":filename_san, "video_br":video_br, "video_w":video_w, "video_h":video_h, "aspect_r":round(aspect_r, 2), "duration":duration, "size":size, "site_id":site_id, "server_name":server_name }
+		print simplejson.dumps(video_json, indent=4, sort_keys=True)
+		#
+		spawn = True
+	else :
+		logthis('Couldn\'t add  %s -  Not enough metadata' % file)
+
 else :
-	logthis('Couldn\'t add  %s -  Not enough metadata' % file)
-
-
+        print "Parameters missing!!!"
+	ufe_add_usage()
