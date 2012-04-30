@@ -5,5 +5,18 @@
 - check encode errors and do something
 - replace ufe-ftp with ufe-upload, with option to use ftp or
   move to folder
+	video_encoded 
+		-ftp_status
+		-ftp_time
+		-ftp_path
+		+upload_status
+		+upload_time
+		+upload_path
+
+	sites
+		-incoming_path
+		+ftp_enabled
+		+upload_folder
+
 - what to do if uploaded file is not a video? (has insufficient
   metadata)
