@@ -132,13 +132,16 @@ if vars().has_key('add') and vars().has_key('site_name') and vars().has_key('fil
 				logthis('No videos left to add in %s' % file_path_only)
 			# Clean PID
 			os.unlink(pidfilename)
-			# Spawn encode
-			if spawn is True :
-				spawn_process("encode")
+	
 	else :
 		print "\nPlease check parameters... Do you want to add a 'file' or a 'dir'?"
 		ufe_add_usage()
 		sys.exit(2)
+        
+	# Spawn encode
+        if spawn is True :
+               spawn_process("encode")
+
 else :
         print "\nParameters missing ..."
 	ufe_add_usage()

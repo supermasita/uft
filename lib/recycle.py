@@ -1,5 +1,9 @@
 #!/usr/bin/python
 # coding: utf-8
+#
+# UNATTENDED FFMPEG ENCODER
+# https://github.com/supermasita/ufe  
+# 
 
 from config import *
 from common import *
@@ -7,12 +11,12 @@ from common import *
 import os
 import shutil
 
-def recycle_old_registers():
+def recycle_old_registers(interval=2880):
         """Removes registers from DB of videos that have already been recycled.
 	"""
 	db=MySQLdb.connect(host=db_host, user=db_user, passwd=db_pass, db=db_database )
         cursor=db.cursor()
-        cursor.execute("SELECT vhash from video_original where server_name='%s' and recycle_status=3 and t_created < DATE_SUB(current_timestamp(), INTERVAL 48 HOUR);" % server_name )
+        cursor.execute("SELECT vhash from video_original where server_name='%s' and recycle_status=3 and t_created < DATE_SUB(current_timestamp(), INTERVAL %i MINUTE);" % (server_name, interval) )
         results=cursor.fetchall()
 	cursor.close ()
 	# Any results?
@@ -30,12 +34,12 @@ def recycle_old_registers():
         db.close ()
 
 
-def select_next_original_recycle():
+def select_next_original_recycle(interval=15):
         """Finds original videos whose encoded videos have been already recycled and deletes them.
         """
         db=MySQLdb.connect(host=db_host, user=db_user, passwd=db_pass, db=db_database )
         cursor=db.cursor()
-        cursor.execute("select vhash, filename_san from video_original where recycle_status=1 and server_name='%s' and status_time<DATE_SUB(CURRENT_TIMESTAMP, INTERVAL 15 MINUTE);" % server_name )
+        cursor.execute("select vhash, filename_san from video_original where recycle_status=1 and server_name='%s' and status_time<DATE_SUB(CURRENT_TIMESTAMP, INTERVAL %i MINUTE);" % (server_name, interval) )
         results=cursor.fetchall()
         pending_video_list = list()
         lista_vhash = list()
@@ -47,7 +51,7 @@ def select_next_original_recycle():
         if vars().has_key('vhash') :
                 for registry in lista_vhash :
                         lvhash = registry[0]
-                        lfilename_san = registry[1]
+			lfilename_san = registry[1]
 			# all encoded videos for vhash
 			cursor.execute("select count(*) from video_encoded where vhash='%s';" % lvhash )
 			result_total = cursor.fetchall()
@@ -57,13 +61,12 @@ def select_next_original_recycle():
 			# compare
                         if result_total[0][0] == result_recycled[0][0] :
 				pending_video = [lvhash, lfilename_san]
-                                pending_video_list.append(pending_video)
-                                pending_original_recycle=1
-        		else :
-				pending_original_recycle = pending_video_list = 0
+				pending_video_list.append(pending_video)
+	# Empty list?
+	if len(pending_video_list)<1 :
+		pending_original_recycle = pending_video_list = 0
 	else :
-                pending_original_recycle = pending_video_list = 0
-
+                pending_original_recycle = 1
         cursor.close ()
         db.close ()
 	return pending_original_recycle, pending_video_list
@@ -92,12 +95,12 @@ def update_original_recycle_status(state, u_vhash):
         db.close ()
 
 
-def select_next_encoded_recycle():
+def select_next_encoded_recycle(interval=15):
 	"""Finds already uploaded encoded videos and deletes them.
 	"""
         db=MySQLdb.connect(host=db_host, user=db_user, passwd=db_pass, db=db_database )
         cursor=db.cursor()
-        cursor.execute("select t_created, vhash, encode_time, vpid, encode_file from video_encoded where recycle_status=1 and ftp_status=3 and encode_status=3 and ftp_time < DATE_SUB(current_timestamp(), INTERVAL 15 MINUTE) and server_name='%s' order by 1 limit 1;" % server_name )
+        cursor.execute("select t_created, vhash, encode_time, vpid, encode_file from video_encoded where recycle_status=1 and ftp_status=3 and encode_status=3 and ftp_time < DATE_SUB(current_timestamp(), INTERVAL %i MINUTE) and server_name='%s' order by 1 limit 1;" % (interval, server_name) )
         results=cursor.fetchall()
         for registry in results:
                 t_created = registry[0]
