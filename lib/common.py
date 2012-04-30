@@ -10,11 +10,11 @@ import subprocess
 import syslog
 
 
-def logthis(message, out=0) :
+def logthis(message, stdout=1) :
         """Writes message to SYSLOG and prints it to STDOUT, if u want.
         """
         syslog.syslog(syslog.LOG_INFO, 'UFE | %s' % message )
-        if out==1 :
+        if stdout==1 :
 		print "%s" % message
 	
 
