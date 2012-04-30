@@ -7,3 +7,13 @@ video_original
 
 # vim swp
 *.swp
+
+# video files
+*.mp4
+*.avi
+*.flv
+*.mpg
+*.mov
+
+# folder were i keep crap
+byebye
