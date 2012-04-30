@@ -5,6 +5,7 @@ from lib.recycle import *
 
 # Search next video to recycle
 pending_original_recycle, pending_video_list = select_next_original_recycle()
+
 if pending_original_recycle == 1 :
 	for registry in pending_video_list :
 		vhash = registry[0]
