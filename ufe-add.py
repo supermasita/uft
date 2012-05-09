@@ -15,6 +15,7 @@ import MySQLdb
 #import datetime
 #import hashlib
 #import time
+import shutil
 import sys
 import simplejson
 import getopt

@@ -18,6 +18,7 @@ import MySQLdb
 import datetime
 import hashlib
 import time
+import shutil
 #import sys
 #import simplejson
 #import getopt
@@ -152,7 +153,9 @@ def create_video_registry(c_vhash, c_filename_orig, c_filename_san, c_video_br, 
 def move_original_file(root, file, filename_san) :
         """Moves original video file from video_origin folder to video_original folder.
         """
-        os.rename(os.path.join(root,file), original+filename_san)
+        # We use shutil to be able to move files from different filesystems
+	#os.rename(os.path.join(root,file), original+filename_san)
+        shutil.move(os.path.join(root,file), original+filename_san)
 
 
 
