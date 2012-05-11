@@ -176,7 +176,7 @@ Many sites can be configured in the same fashion. We will extend this README.
 	# UFE : MAIN
 	* * * * * python /var/www/html/ufe/ufe-add.py -a dir -s default -f /var/tmp/videos/ > /var/tmp/ufe-add.log 2>&1
 	* * * * * python /var/www/html/ufe/ufe-encode.py > /var/tmp/ufe-encode.log 2>&1
-	* * * * * python /var/www/html/ufe/ufe-ftp.py > /var/tmp/ufe-ftp.log 2>&1
+	* * * * * python /var/www/html/ufe/ufe-upload.py > /var/tmp/ufe-upload.log 2>&1
 	# UFE : RECYCLING
 	* * * * * python /var/www/html/ufe/ufe-recycle.py -r encoded > /var/tmp/ufe-recycle_encoded.log 2>&1
 	* * * * * python /var/www/html/ufe/ufe-recycle.py -r original > /var/tmp/ufe-recycle_original.log 2>&1
@@ -217,7 +217,7 @@ Many sites can be configured in the same fashion. We will extend this README.
 
 	* "ufe-encode" is spawned and it will encode any pending video.
 
-	* After each encoding, "ufe-ftp" is spawned and any pending upload
+	* After each encoding, "ufe-upload" is spawned and any pending upload
 	video is uploaded. 
 
 	* "ufe-recycle" will erase :

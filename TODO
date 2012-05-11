@@ -1,7 +1,7 @@
 - DONE! replace ufe-checker with ufe-add
 - DONE! create ufe-recycle with parameters, to the 3 recycling
   script we have
-- create ufe-check (use vhash as parameter to check status)
+- DONE! create ufe-control (use vhash as parameter to check status)
 - check encode errors and do something
 - replace ufe-ftp with ufe-upload, with option to use ftp or
   move to folder
