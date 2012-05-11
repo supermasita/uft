@@ -204,7 +204,7 @@ def check_and_encode() :
 				pending_encode, vhash, vpid, encode_status, filename_san, encode_file, param = select_next_encode()
 				encode_video_ffmpeg(vhash, vpid, filename_san, encode_file, param)
 				# Spawn ftp.py
-				spawn_process("ftp")
+				spawn_process("upload")
 			else :
 				print "No videos left to encode."
 				check_pending=0

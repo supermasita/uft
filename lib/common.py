@@ -72,8 +72,8 @@ def spawn_process(process) :
 	if process=="encode":
 		pid = subprocess.Popen(["%s/ufe-encode.py" % core_root]).pid		
 		logthis('Spawned %s with PID %i' % (process, pid))
-	elif process=="ftp":
-		pid = subprocess.Popen(["%s/ufe-ftp.py" % core_root]).pid
+	elif process=="upload":
+		pid = subprocess.Popen(["%s/ufe-upload.py" % core_root]).pid
 		logthis('Spawned %s with PID %i' % (process, pid))
 	else:
 		logthis('No process named %s !' % process)
