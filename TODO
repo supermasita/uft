@@ -18,5 +18,6 @@
 		+ftp_enabled
 		+upload_folder
 
-- what to do if uploaded file is not a video? (has insufficient
+- DONE! what to do if uploaded file is not a video? (has insufficient
   metadata)
+- Deprecate "vp_done, vp_run, vp_total, vp_error"
