@@ -10,6 +10,10 @@ import sys
 import getopt
 import simplejson
 
+#
+##
+###
+
 def ufe_control_usage():
         """Prints the usage of "ufe-control".
         """
@@ -92,9 +96,9 @@ def status_check(vhash):
 	db.close ()
 
 
-
-
-
+#
+##
+###
 
 # Get parameters
 argv = sys.argv[1:]

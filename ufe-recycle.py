@@ -9,6 +9,10 @@ from lib.recycle import *
 import sys
 import getopt
 
+#
+##
+###
+
 def ufe_recycle_usage():
         """Prints the usage of "ufe-recycle".
         """
@@ -18,8 +22,13 @@ def ufe_recycle_usage():
         ufe-recycle.py -r encoded
         ufe-recycle.py -r original
         ufe-recycle.py -r registers
+        ufe-recycle.py -r nonvideos
 
         """
+#
+##
+###
+
 
 # Get parameters
 argv = sys.argv[1:]
@@ -75,6 +84,10 @@ if vars().has_key('recycle_this') :
 		else :
 			print "No original videos left to recycle."
 	#
+	elif recycle_this  == 'nonvideos' :
+		# Call function ...
+		recycle_nonvideos()
+	#	
 	elif recycle_this  == 'registers' :
 		# Call function ...
 		recycle_old_registers()

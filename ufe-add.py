@@ -77,10 +77,21 @@ if vars().has_key('add') and vars().has_key('site_name') and vars().has_key('fil
 			logthis('%s was added as  %s for %s' % (filename_orig, filename_san, site_name))
 			video_json = { "vhash":vhash, "filename_orig":filename_orig, "filename_san":filename_san, "video_br":video_br, "video_w":video_w, "video_h":video_h, "aspect_r":round(aspect_r, 2), "duration":duration, "size":size, "site_id":site_id, "server_name":server_name }
 			print simplejson.dumps(video_json, indent=4, sort_keys=True)
-			#
-			spawn = True
+                        # If its a video, spawn encode
+                        if not vars().has_key('spawn') :
+                                spawn = False
 		else :
-			logthis('Couldn\'t add  %s -  Not enough metadata' % file)
+			# Video hash 
+			vhash = create_vhash(file_name_only, site_name)
+			# Append original filename (with vhash appended) and sanitized filename
+			filename_san, filename_orig = create_filename_san(file_name_only, vhash)
+			# Insert registers in DB
+			create_nonvideo_registry(vhash, filename_orig, filename_san, site_id, server_name)
+			move_original_file(file_path_only, file_name_only, filename_san)
+			logthis('Couldn\'t add %s :  not enough metadata or not a video.' % file_name_only)
+			# If its a video, spawn encode
+			if not vars().has_key('spawn') :
+				spawn = False
 	#
 	elif add == 'dir' :
 	        #        
@@ -110,7 +121,7 @@ if vars().has_key('add') and vars().has_key('site_name') and vars().has_key('fil
 						try:
 							# Check metada to know if it si a video
 							isvideo, video_br, video_w, video_h, aspect_r, duration, size = media_check('%s' % file_complete)
-							if isvideo == True :
+							if isvideo is True :
 								# Video hash 
 								vhash = create_vhash(file, site_name)
 								# Append original filename (with vhash appended) and sanitized filename
@@ -121,10 +132,23 @@ if vars().has_key('add') and vars().has_key('site_name') and vars().has_key('fil
 								move_original_file(root, file, filename_san)
 								create_thumbnail(vhash, filename_san)
 								logthis('%s was added as  %s for %s' % (filename_orig, filename_san, site))
-								#
-								spawn = True
+								# If its a video, spawn encode
+								if not vars().has_key('spawn') :
+									spawn = True
 							else :
-								logthis('Couldn\'t add  %s -  Not enough metadata' % file)
+								# Video hash 
+                                                                vhash = create_vhash(file, site_name)
+                                                                # Append original filename (with vhash appended) and sanitized filename
+                                                                filename_san, filename_orig = create_filename_san(file, vhash)
+								# Insert registers in DB
+								create_nonvideo_registry(vhash, filename_orig, filename_san, site_id, server_name)
+								move_original_file(root, file, filename_san)
+								logthis('Couldn\'t add %s : not enough metadata or not a video.' % file)
+								# If its a video, spawn encode
+                                                                if not vars().has_key('spawn') :
+                                                                        spawn = False
+									print spawn
+
 						except:
 							pass
 					else :

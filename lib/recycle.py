@@ -33,6 +33,34 @@ def recycle_old_registers(interval=2880):
 		print "There are no old registers to delete."
         db.close ()
 
+def recycle_nonvideos():
+        """Removes non videos registers from DB of videos and erases the files.
+        """
+        db = MySQLdb.connect(host=db_host, user=db_user, passwd=db_pass, db=db_database )
+        cursor = db.cursor()
+        cursor.execute("SELECT vhash, filename_san FROM video_original where video_br is null and video_w is null and server_name='%s';" % server_name )
+	results = cursor.fetchall()
+	#	
+	if len(results) > 1 :
+		#	
+		for vhash, filename in results :
+			print vhash, filename
+			# Delete filename
+			try :
+				os.unlink('%s/%s' % (original, filename))
+				logthis('Deleted nonvideo file : %s/%s' % (original, filename))
+			except :
+				logthis('Couldn\'t delete nonvideo file : %s/%s' % (original, filename))
+			# Delete register
+			cursor.execute("DELETE from video_original where vhash='%s';" % vhash) 
+			logthis('Deleted nonvideo register : %s' % vhash)
+			db.commit ()
+	else :
+		logthis('No nonvideos left to recycle.')
+	#
+        cursor.close ()
+        db.close ()
+
 
 def select_next_original_recycle(interval=15):
         """Finds original videos whose encoded videos have been already recycled and deletes them.

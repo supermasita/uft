@@ -56,11 +56,12 @@ def media_check(file) :
                         video_br = track.overall_bit_rate
                         duration = track.duration
                         size = track.file_size
-        # check if its has overall bitrate and video width - we need it to choose video profiles        
+	# check if its has overall bitrate and video width - we need it to choose video profiles        
         if vars().has_key('video_br') and vars().has_key('video_w'):
                 isvideo = True
         else :
-               isvideo, video_br, video_w, video_h, aspect_r, duration, size = False
+		isvideo = False 
+        	video_br, video_w, video_h, aspect_r, duration, size = 0,0,0,0,0,0 
 	return isvideo, video_br, video_w, video_h, aspect_r, duration, size
 
 
@@ -150,11 +151,24 @@ def create_video_registry(c_vhash, c_filename_orig, c_filename_san, c_video_br, 
 	cursor.close ()
 	db.close ()
 
+def create_nonvideo_registry(vhash, filename_orig, filename_san, site_id, server_name ):
+        """Creates registry in table VIDEO_ORIGINAL for a file that is not a video
+	   or is a video with insufficiente METADATA. 
+        """
+        t_created = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+        db=MySQLdb.connect(host=db_host, user=db_user, passwd=db_pass, db=db_database )
+        cursor=db.cursor()
+        # Insert original video registry
+        cursor.execute("insert into video_original set vhash='%s', filename_orig='%s', filename_san='%s', t_created='%s', site_id=%i, server_name='%s';" % (vhash, filename_orig, filename_san, t_created, site_id, server_name) )
+        db.commit()
+        cursor.close ()
+        db.close ()
+
+
 def move_original_file(root, file, filename_san) :
         """Moves original video file from video_origin folder to video_original folder.
         """
         # We use shutil to be able to move files from different filesystems
-	#os.rename(os.path.join(root,file), original+filename_san)
         shutil.move(os.path.join(root,file), original+filename_san)
 
 

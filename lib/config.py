@@ -3,10 +3,6 @@
 
 # Core root
 core_root = "/var/www/html/ufe/"
-
-# Absolute path to folder where videos arrive 
-# incoming = "/var/www/html/ufe/video_origin/" (!)DEPRECATED
-
 # Absolute path to folder where original videos are copied
 original = "/var/www/html/ufe/video_original/"
 # Absolute path to folder where encoded videos are created

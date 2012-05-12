@@ -4,8 +4,8 @@
 #-----------------------------------------------------------------------------#
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-(!) WORD OF WARNING: This proyect is in a development stage and not even the 
-README is complete. Use it at your own risk, and if you want, join us :)
+ (!) WORD OF WARNING: This proyect is in a development stage and not even the 
+ README is complete. Use it at your own risk; don't blame us if you cause WW3
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 1. INTRODUCTION
@@ -27,7 +27,7 @@ README is complete. Use it at your own risk, and if you want, join us :)
 3.1 Encoding workflow
 3.1.1 Checker
 3.1.2 Encoder
-3.1.3 Ftp
+3.1.3 Uploader
 
 4. GETTING HELP
 4.1 Troubleshooting  DO THIS!
@@ -74,11 +74,12 @@ will always be as simple as possible.
  	  or per site).
 	* Simple MySQL structure (no auto increments, no joins).
 	* Multiserver in mind (many encoders and master-master DB).
-	* Uploads to FTP server using year, month, date folder structure.
+	* Uploads to FTP server (or local directory) using year, month, date 
+	  folder structure.
 	* Maximum number of FFMPEG processes may be configured for each encoder
 	  (default: 2).
-	* Non-blocking queues won't let a huge video consume all your processes
-	  and leave all other waiting.
+	* Non-blocking weighted queues won't let a huge video consume all your 
+	  processes and leave all other waiting.
 	* Logging in syslog.
 	* Per video FFMPEG log.
 	* Video hinting.
@@ -86,21 +87,28 @@ will always be as simple as possible.
 1.4 To-do
 	
 	* Create video thumbnail and store it as a blob.
-	* Weighted queues.
 	* Handle exceptions.
 	* Create install script.
 	* "Pythonize" scripts.
 	* Create python daemon and avoid crons.
-	* Monitor file last acces with inotify.
+	* Monitor file last access with inotify.
 	* Improve logging.
-	* Upload to folder as alternative to FTP.
 
 1.5 Credits
 
-	* Alejandro Ferrari - Sysadmin and Wowza expert 
-	* Supermasita - Python coder wannabe 
-        * "Pymediainfo" (https://github.com/paltman/pymediainfo)
-        * "qt-faststart" (https://github.com/danielgtaylor/qtfaststart)
+	* Alejandro Ferrari
+	  Sysadmin and Wowza expert 
+
+	* Supermasita
+	  Python coder wannabe and part time human being
+
+        * "Pymediainfo"
+	  Wrapper for Mediainfo CLI 
+	  https://github.com/paltman/pymediainfo
+
+        * "qt-faststart"
+	  Used to hint videos
+	  https://github.com/danielgtaylor/qtfaststart
 
 -------------------------------------------------------------------------------
 
@@ -111,9 +119,11 @@ doubt about installation.
 
 2.1 Dependencies
 
-	* "FFMPEG" (http://ffmpeg.org/) (if using RHEL best install it from 
-	http://atrpms.net/)
-	* "Medianfo CLI" (http://mediainfo.sourceforge.net/)
+	* "MySQL-python" http://sourceforge.net/projects/mysql-python/ 
+	* "python-simplejson" http://pypi.python.org/pypi/simplejson/ 
+	* "FFMPEG" http://ffmpeg.org/ 
+	   (if using RHEL best install it from http://atrpms.net/)
+	* "Medianfo CLI" http://mediainfo.sourceforge.net/
 
 
 2.2 Creating directories
@@ -181,14 +191,14 @@ Many sites can be configured in the same fashion. We will extend this README.
 	* * * * * python /var/www/html/ufe/ufe-recycle.py -r encoded > /var/tmp/ufe-recycle_encoded.log 2>&1
 	* * * * * python /var/www/html/ufe/ufe-recycle.py -r original > /var/tmp/ufe-recycle_original.log 2>&1
 	* * * * * python /var/www/html/ufe/ufe-recycle.py -r registers >/var/tmp/ufe-recycle_registers.log 2>&1
+	* * * * * python /var/www/html/ufe/ufe-recycle.py -r nonvideos >/var/tmp/ufe-recycle_nonvideos.log 2>&1
 	# UFE : Cleans .xml and .err files created by "pymediainfo"
 	* * * * * find /tmp/*.xml -mmin +5 -ls -delete > /var/tmp/ufe-mediainfo_expire_xml.log 2>&1
 	* * * * * find /tmp/*.err -mmin +5 -ls -delete > /var/tmp/ufe-mediainfo_expire_err.log 2>&1
 	
-	(!) Contact us if you want to use inotify to monitor last access of
-	    files with INCRON: 
-	    (http://inotify.aiken.cz/?section=incron&page=why&lang=en)
-
+-------------------------------------------------------------------------------
+	Contact us if you want to use inotify to monitor last access of
+	files with INCRON ( http://inotify.aiken.cz/ )
 -------------------------------------------------------------------------------
 
 3. USING UFE
@@ -230,7 +240,7 @@ Many sites can be configured in the same fashion. We will extend this README.
 
 3.1.2 Encoder (to do)
 
-3.1.3 Ftp (to do)
+3.1.3 Uploader (to do)
 
 3.1.4 States (to do)
 	
