@@ -2,8 +2,8 @@
 - DONE! create ufe-recycle with parameters, to the 3 recycling
   script we have
 - DONE! create ufe-control (use vhash as parameter to check status)
-- check encode errors and do something
-- replace ufe-ftp with ufe-upload, with option to use ftp or
++ check encode errors and do something
++ replace ufe-ftp with ufe-upload, with option to use ftp or
   move to folder
 	video_encoded 
 		-ftp_status
@@ -20,4 +20,5 @@
 
 - DONE! what to do if uploaded file is not a video? (has insufficient
   metadata)
-- Deprecate "vp_done, vp_run, vp_total, vp_error"
++ Deprecate "vp_done, vp_run, vp_total, vp_error"
+- DONE! skip transcoding if video matches target quality

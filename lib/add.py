@@ -153,30 +153,22 @@ def create_video_registry(vhash, filename_orig, filename_san, video_br, video_w,
                 month = time.strftime("%m", time.localtime())
                 day = time.strftime("%d", time.localtime())
 		ftp_path="%s/%s/%s" % (year, month, day)
-		print vp_video_br
-		print video_br
-		print vp_video_f
-		print video_f
+		# Skip transcoding if the original file matches target quality
 		if (vp_video_f == video_f) and (video_br in range(vp_video_br-100000,vp_video_br+100000)):
-			#
-			print "registro"
+			# Add registry with encode_status as done
 			cursor.execute("insert into video_encoded set encode_status=3, vhash='%s', vpid=%i, encode_file='%s', t_created='%s', weight=%i, ftp_path='%s', site_id=%i, server_name='%s';" % (vhash, vpid, encode_file, t_created, weight, ftp_path, site_id, server_name) )
                         # Create directory if it doesnt exists
-			print "dir"
                         if not os.path.exists('%s/%s' % (encoded, vhash)):
 	                        os.makedirs('%s/%s' % (encoded, vhash))
 			# Copy file with vp name
-			print "copy"
-			print original, filename_san, encoded, vhash, encode_file
 			shutil.copy(os.path.join(root,file), "%s/%s/%s" % (encoded, vhash, encode_file))		
 			# Create fake FFMPEG log
-			print "looog"
 			log_filename = "%s-%s.log" % (filename_san_n, profile_name)
-			print log_filename
 			log_file = open("%s/%s/%s" % (encoded, vhash, log_filename), "w")
-			log_file.write("File was not transcoded: original video matched video profile")
+			log_file.write("File was not transcoded: original video matched profile\n")
 			log_file.close()
-			print "fin"
+			logthis('Registry added for %s' % encode_file)
+			logthis('%s will not be transcoded: original video matched profile' % encode_file)	
 		else:
 			# We insert registrys for each video profile
                 	cursor.execute("insert into video_encoded set vhash='%s', vpid=%i, encode_file='%s', t_created='%s', weight=%i, ftp_path='%s', site_id=%i, server_name='%s';" % (vhash, vpid, encode_file, t_created, weight, ftp_path, site_id, server_name) )
