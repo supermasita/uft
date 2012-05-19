@@ -155,36 +155,27 @@ def create_video_json_file(vhash) :
 	"""
 	db=MySQLdb.connect(host=db_host, user=db_user, passwd=db_pass, db=db_database )
 	cursor=db.cursor()
-	
 	# Create dictionary with video profiles specs
-	cursor.execute("SELECT vpid, profile_name, bitrate, height, width from video_profile;")
+	cursor.execute("SELECT vpid, profile_name, video_br, video_h, video_w from video_profile;")
 	video_profiles = {}
-
 	# Loop query result and fill dictionary
 	while (1):
 		result = cursor.fetchone()
 		if result == None: break
 		#
-		video_profiles["%i" % result[0]] = { "profile_name" : result[1],  "bitrate" : "%i" % result[2], "height" : "%i" % result[3], "width" : "%i" % result[4] }
-
-
-
+		video_profiles["%i" % result[0]] = { "profile_name" : result[1],  "video_br" : "%i" % result[2], "video_h" : "%i" % result[3], "video_w" : "%i" % result[4] }
 	# Create dictionary with all the encoded videos of a given vhash
 	cursor.execute("SELECT vpid, encode_file, encode_status, ftp_path from video_encoded where vhash='%s';" % vhash)
 	video_json = {}
-
 	# Loop query result and fill dictionary
 	while (1):
 		result = cursor.fetchone()
 		if result == None: break
 		#
-		video_json[video_profiles["%i" % result[0]]["profile_name"]] = { "file" : result[1], "ftp_path" : result[3], "encode_status" : result[2], "bitrate" : video_profiles["%i" % result[0]]["bitrate"], "height" : video_profiles["%i" % result[0]]["height"], "width" : video_profiles["%i" % result[0]]["width"] }
-
-
+		video_json[video_profiles["%i" % result[0]]["profile_name"]] = { "file" : result[1], "ftp_path" : result[3], "encode_status" : result[2], "video_br" : video_profiles["%i" % result[0]]["video_br"], "video_h" : video_profiles["%i" % result[0]]["video_h"], "video_w" : video_profiles["%i" % result[0]]["video_w"] }
 	# Close cursor and DB conn
 	cursor.close ()
 	db.close()
-
 	# Create JSON file
 	video_json_content = simplejson.dumps(video_json, indent=4, sort_keys=True)
 	video_json_file = open("%s%s/%s.json" % (encoded, vhash, vhash), 'w')

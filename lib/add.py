@@ -52,17 +52,27 @@ def media_check(file) :
                         video_w = track.width
                         video_h = track.height
                         aspect_r = round(float(track.display_aspect_ratio),2)
+                        video_br = track.bit_rate
+			video_f = track.format
                 if track.track_type == 'General':
-                        video_br = track.overall_bit_rate
+                        total_br = track.overall_bit_rate
                         duration = track.duration
                         size = track.file_size
-	# check if its has overall bitrate and video width - we need it to choose video profiles        
+		if track.track_type == 'Audio':
+			audio_f = track.format
+			audio_br = track.bit_rate
+	# If there no video_br use the total_br
+	#if not vars().has_key('video_br'):
+	#	video_br = total_br
+	# Check if its has overall bitrate and video width - we need it to choose video profiles        
         if vars().has_key('video_br') and vars().has_key('video_w'):
                 isvideo = True
         else :
 		isvideo = False 
-        	video_br, video_w, video_h, aspect_r, duration, size = 0,0,0,0,0,0 
-	return isvideo, video_br, video_w, video_h, aspect_r, duration, size
+        	video_br, video_w, video_h, aspect_r, duration, size, total_br, audio_br = 0,0,0,0,0,0,0,0
+		video_f = "none"
+		audio_f = "none"
+	return isvideo, video_br, video_w, video_h, aspect_r, duration, size, total_br, audio_br, video_f, audio_f 
 
 
 def create_vhash(c_file, c_site_name) :
@@ -88,7 +98,7 @@ def create_filename_san(file, vhash) :
         return filename_san, filename_orig
 
 
-def create_video_registry(c_vhash, c_filename_orig, c_filename_san, c_video_br, c_video_w, c_video_h, c_aspect_r, c_duration, c_size, c_site_id, c_server_name ):
+def create_video_registry(vhash, filename_orig, filename_san, video_br, video_w, video_h, aspect_r, duration, size, site_id, server_name, total_br, audio_br, video_f, audio_f, root, file ):
 	"""Creates registry in table VIDEO_ORIGINAL. 
 	   Creates registries in table VIDEO_ENCODED according to the video profiles that match the original video. 
 	"""
@@ -96,57 +106,86 @@ def create_video_registry(c_vhash, c_filename_orig, c_filename_san, c_video_br, 
 	db=MySQLdb.connect(host=db_host, user=db_user, passwd=db_pass, db=db_database )
 	cursor=db.cursor()
 	# Insert original video registry
-	cursor.execute("insert into video_original set vhash='%s', filename_orig='%s', filename_san='%s', video_br=%i, video_w=%i, video_h=%i, aspect_r=%f, t_created='%s', duration=%i, size=%i, site_id=%i, server_name='%s';" % (c_vhash, c_filename_orig, c_filename_san, c_video_br, c_video_w, c_video_h, c_aspect_r, t_created, c_duration, c_size, c_site_id, c_server_name ) )
+	cursor.execute("insert into video_original set vhash='%s', filename_orig='%s', filename_san='%s', video_br=%i, video_w=%i, video_h=%i, aspect_r=%f, t_created='%s', duration=%i, size=%i, site_id=%i, server_name='%s', total_br=%i, audio_br=%i, video_f='%s', audio_f='%s' ;" % (vhash, filename_orig, filename_san, video_br, video_w, video_h, aspect_r, t_created, duration, size, site_id, server_name, total_br, audio_br, video_f, audio_f ) )
 	db.commit()
 	# Check profiles enabled for the site - NULL will use all profiles enabled globally
-	cursor.execute("select vp_enabled from sites where id=%i;" % c_site_id )
+	cursor.execute("select vp_enabled from sites where id=%i;" % site_id )
 	vp_enabled=cursor.fetchall()[0]
 	# Check the aspect ratio of the video and choose profiles?
 	aspect_split=1.6
 	aspect_wide=1.77
 	aspect_square=1.33
-	if c_aspect_r <= aspect_split :
+	# Choose video profile based on aspect ratio and min_video_w (TODO: check min_video_br)
+	# 4:3
+	if aspect_r <= aspect_split :
 		if vp_enabled[0] is None :
-                	cursor.execute("select vpid, profile_name, bitrate, width from video_profile where %i>=min_width and round(aspect_r,2)=%f and enabled='1';" % (c_video_w, aspect_square))
+                	cursor.execute("select vpid, profile_name, video_br, video_w, video_f from video_profile where %i>=min_video_w and round(aspect_r,2)=%f and enabled='1';" % (video_w, aspect_square))
                 	resultado=cursor.fetchall()
         	else :
-                	cursor.execute("select vpid, profile_name, bitrate, width from video_profile where %i>=min_width and round(aspect_r,2)=%f and enabled='1' and vpid in (%s);" % (c_video_w, aspect_square, vp_enabled[0]) )
+                	cursor.execute("select vpid, profile_name, video_br, video_w, video_f from video_profile where %i>=min_video_w and round(aspect_r,2)=%f and enabled='1' and vpid in (%s);" % (video_w, aspect_square, vp_enabled[0]) )
                 	resultado=cursor.fetchall()
-	elif c_aspect_r > aspect_split :
+	# 16:9
+	elif aspect_r > aspect_split :
                 if vp_enabled[0] is None :
-                        cursor.execute("select vpid, profile_name, bitrate, width from video_profile where %i>=min_width and round(aspect_r,2)=%f and enabled='1';" % (c_video_w, aspect_wide))
+                        cursor.execute("select vpid, profile_name, video_br, video_w, video_f from video_profile where %i>=min_video_w and round(aspect_r,2)=%f and enabled='1';" % (video_w, aspect_wide))
 			resultado=cursor.fetchall()
                 else :
-                        cursor.execute("select vpid, profile_name, bitrate, width from video_profile where %i>=min_width and round(aspect_r,2)=%f and enabled='1' and vpid in (%s);" % (c_video_w, aspect_wide, vp_enabled[0]) )
+                        cursor.execute("select vpid, profile_name, video_br, video_w, video_f from video_profile where %i>=min_video_w and round(aspect_r,2)=%f and enabled='1' and vpid in (%s);" % (video_w, aspect_wide, vp_enabled[0]) )
 			resultado=cursor.fetchall()
 	# We create a registry for each video profile
 	vp_total=0
 	for registro in resultado :
 		vpid = registro[0]
 		profile_name = registro[1]
-		bitrate = registro[2]
-		width = registro[3]
+		vp_video_br = registro[2]
+		vp_video_w = registro[3]
+		vp_video_f = registro[4]
 		# Create filename for the encoded video, according to video profile
-		filename_san_n, nombre_orig_e = os.path.splitext(c_filename_san)
+		filename_san_n, nombre_orig_e = os.path.splitext(filename_san)
 		encode_file = "%s-%s.mp4" % (filename_san_n, profile_name)
 		# We assign an integer based on specifications of the original video and the video profile
 		# in order identify which videos will be more resource intense
-		weight=int((c_duration*(float(bitrate)/float(width)))/10)
+		weight=int((duration*(float(vp_video_br)/float(vp_video_w)))/10)
 		# Timestamp                             
 		t_created = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
 		# Path used in FTP - we will use the date
                 year = time.strftime("%Y", time.localtime())
                 month = time.strftime("%m", time.localtime())
                 day = time.strftime("%d", time.localtime())
-		c_ftp_path="%s/%s/%s" % (year, month, day)
-		# We insert registrys for each video profile
-                cursor.execute("insert into video_encoded set vhash='%s', vpid=%i, encode_file='%s', t_created='%s', weight=%i, ftp_path='%s', site_id=%i, server_name='%s';" % (c_vhash, vpid, encode_file, t_created, weight, c_ftp_path, c_site_id, c_server_name) )
+		ftp_path="%s/%s/%s" % (year, month, day)
+		print vp_video_br
+		print video_br
+		print vp_video_f
+		print video_f
+		if (vp_video_f == video_f) and (video_br in range(vp_video_br-100000,vp_video_br+100000)):
+			#
+			print "registro"
+			cursor.execute("insert into video_encoded set encode_status=3, vhash='%s', vpid=%i, encode_file='%s', t_created='%s', weight=%i, ftp_path='%s', site_id=%i, server_name='%s';" % (vhash, vpid, encode_file, t_created, weight, ftp_path, site_id, server_name) )
+                        # Create directory if it doesnt exists
+			print "dir"
+                        if not os.path.exists('%s/%s' % (encoded, vhash)):
+	                        os.makedirs('%s/%s' % (encoded, vhash))
+			# Copy file with vp name
+			print "copy"
+			print original, filename_san, encoded, vhash, encode_file
+			shutil.copy(os.path.join(root,file), "%s/%s/%s" % (encoded, vhash, encode_file))		
+			# Create fake FFMPEG log
+			print "looog"
+			log_filename = "%s-%s.log" % (filename_san_n, profile_name)
+			print log_filename
+			log_file = open("%s/%s/%s" % (encoded, vhash, log_filename), "w")
+			log_file.write("File was not transcoded: original video matched video profile")
+			log_file.close()
+			print "fin"
+		else:
+			# We insert registrys for each video profile
+                	cursor.execute("insert into video_encoded set vhash='%s', vpid=%i, encode_file='%s', t_created='%s', weight=%i, ftp_path='%s', site_id=%i, server_name='%s';" % (vhash, vpid, encode_file, t_created, weight, ftp_path, site_id, server_name) )
 		db.commit ()
 		logthis('Registry added for %s' % encode_file)	
 		# We add 1 to the total quantity of profiles for video
 		vp_total=vp_total+1
         # Update the total quantity of profiles for video
-	cursor.execute("update video_original set vp_total=%i where vhash='%s';" % (vp_total, c_vhash) )
+	cursor.execute("update video_original set vp_total=%i where vhash='%s';" % (vp_total, vhash) )
 	db.commit ()
 	cursor.close ()
 	db.close ()
