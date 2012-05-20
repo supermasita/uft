@@ -24,12 +24,16 @@ import shutil
 #import getopt
 
 
+#
+##
+###
+
 def get_site(site_name) :
         """Get site info.
         """
         db=MySQLdb.connect(host=db_host, user=db_user, passwd=db_pass, db=db_database )
         cursor_sites = db.cursor()
-        cursor_sites.execute("select name, id, enabled from sites;")
+        cursor_sites.execute("select name, id, enabled, vp_priority from sites;")
         results = cursor_sites.fetchall()
         cursor_sites.close ()
         db.close ()
@@ -37,7 +41,8 @@ def get_site(site_name) :
                 site_name = result[0]
 		site_id = result[1]
 		site_enabled = result[2]
-	return site_name, site_id, site_enabled
+		vp_priority = result[3]
+	return site_name, site_id, site_enabled, vp_priority
 
 
 def media_check(file) :
@@ -98,7 +103,7 @@ def create_filename_san(file, vhash) :
         return filename_san, filename_orig
 
 
-def create_video_registry(vhash, filename_orig, filename_san, video_br, video_w, video_h, aspect_r, duration, size, site_id, server_name, total_br, audio_br, video_f, audio_f, root, file ):
+def create_video_registry(vhash, filename_orig, filename_san, video_br, video_w, video_h, aspect_r, duration, size, site_id, server_name, total_br, audio_br, video_f, audio_f, root, file, vp_priority ):
 	"""Creates registry in table VIDEO_ORIGINAL. 
 	   Creates registries in table VIDEO_ENCODED according to the video profiles that match the original video. 
 	"""
@@ -140,6 +145,11 @@ def create_video_registry(vhash, filename_orig, filename_san, video_br, video_w,
 		vp_video_br = registro[2]
 		vp_video_w = registro[3]
 		vp_video_f = registro[4]
+		# Check if vp priority according to site config
+		if vp_priority == vpid :
+			priority = 0 
+		else :
+			priority = 10
 		# Create filename for the encoded video, according to video profile
 		filename_san_n, nombre_orig_e = os.path.splitext(filename_san)
 		encode_file = "%s-%s.mp4" % (filename_san_n, profile_name)
@@ -167,11 +177,10 @@ def create_video_registry(vhash, filename_orig, filename_san, video_br, video_w,
 			log_file = open("%s/%s/%s" % (encoded, vhash, log_filename), "w")
 			log_file.write("File was not transcoded: original video matched profile\n")
 			log_file.close()
-			logthis('Registry added for %s' % encode_file)
 			logthis('%s will not be transcoded: original video matched profile' % encode_file)	
 		else:
 			# We insert registrys for each video profile
-                	cursor.execute("insert into video_encoded set vhash='%s', vpid=%i, encode_file='%s', t_created='%s', weight=%i, ftp_path='%s', site_id=%i, server_name='%s';" % (vhash, vpid, encode_file, t_created, weight, ftp_path, site_id, server_name) )
+                	cursor.execute("insert into video_encoded set vhash='%s', vpid=%i, encode_file='%s', t_created='%s', weight=%i, ftp_path='%s', site_id=%i, server_name='%s', priority='%s';" % (vhash, vpid, encode_file, t_created, weight, ftp_path, site_id, server_name, priority) )
 		db.commit ()
 		logthis('Registry added for %s' % encode_file)	
 		# We add 1 to the total quantity of profiles for video

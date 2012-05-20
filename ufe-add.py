@@ -64,7 +64,7 @@ if vars().has_key('add') and vars().has_key('site_name') and vars().has_key('fil
         	file_name_only = file_full_path.split("/")[-1]
 	        file_path_only = "/".join(file_full_path.split("/")[:-1])+"/"
 		# Tell me something about the site
-		site_name, site_id, site_enabled = get_site(site_name)
+		site_name, site_id, site_enabled, vp_priority = get_site(site_name)
 		# Check metada to know if its a video
 		isvideo, video_br, video_w, video_h, aspect_r, duration, size, total_br, audio_br, video_f, audio_f = media_check(file_full_path)
 		if isvideo == True :
@@ -73,7 +73,7 @@ if vars().has_key('add') and vars().has_key('site_name') and vars().has_key('fil
 			# Append original filename (with vhash appended) and sanitized filename
 			filename_san, filename_orig = create_filename_san(file_name_only, vhash)
 			# Insert registers in DB
-			create_video_registry(vhash, filename_orig, filename_san, video_br, video_w, video_h, aspect_r, duration, size, site_id, server_name, total_br, audio_br, video_f, audio_f, root, file)
+			create_video_registry(vhash, filename_orig, filename_san, video_br, video_w, video_h, aspect_r, duration, size, site_id, server_name, total_br, audio_br, video_f, audio_f, root, file, vp_priority)
 			# Move file and create thumbnail blob
 			move_original_file(file_path_only, file_name_only, filename_san)
 			create_thumbnail(vhash, filename_san)
@@ -100,7 +100,7 @@ if vars().has_key('add') and vars().has_key('site_name') and vars().has_key('fil
 	        #        
         	file_path_only = "/".join(file_full_path.split("/")[:-1])+"/"
 		# Tell me something about the site
-                site_name, site_id, site_enabled = get_site(site_name)
+                site_name, site_id, site_enabled, vp_priority = get_site(site_name)
 		# Initialize spawn
 		spawn = False 
 		# Check PID file 
@@ -130,7 +130,7 @@ if vars().has_key('add') and vars().has_key('site_name') and vars().has_key('fil
 								# Append original filename (with vhash appended) and sanitized filename
 								filename_san, filename_orig = create_filename_san(file, vhash)
 								# Insert registers in DB
-								create_video_registry(vhash, filename_orig, filename_san, video_br, video_w, video_h, aspect_r, duration, size, site_id, server_name, total_br, audio_br, video_f, audio_f, root, file)
+								create_video_registry(vhash, filename_orig, filename_san, video_br, video_w, video_h, aspect_r, duration, size, site_id, server_name, total_br, audio_br, video_f, audio_f, root, file, vp_priority)
 								# Move file and create thumbnail blob
 								move_original_file(root, file, filename_san)
 								create_thumbnail(vhash, filename_san)

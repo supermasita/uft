@@ -37,9 +37,9 @@ def select_next_encode():
 	skip_vhash=skip_vhash[:-1]			
 	# No VP running? We choose any VHASH. Else, use "NOT IN"
 	if len(skip_vhash) == 0 :
-		cursor.execute("select video_encoded.vhash, video_encoded.vpid, video_encoded.encode_status, video_encoded.encode_file from video_encoded where video_encoded.encode_status=1 and video_encoded.server_name='%s' order by video_encoded.weight limit 1;" % server_name )
+		cursor.execute("select video_encoded.vhash, video_encoded.vpid, video_encoded.encode_status, video_encoded.encode_file from video_encoded where video_encoded.encode_status=1 and video_encoded.server_name='%s' order by priority, video_encoded.weight, t_created limit 1;" % server_name )
 	else :
-		cursor.execute("select video_encoded.vhash, video_encoded.vpid, video_encoded.encode_status, video_encoded.encode_file from video_encoded where video_encoded.encode_status=1 and video_encoded.server_name='%s' and video_encoded.vhash not in (%s) order by video_encoded.weight limit 1;" % (server_name, skip_vhash) )
+		cursor.execute("select video_encoded.vhash, video_encoded.vpid, video_encoded.encode_status, video_encoded.encode_file from video_encoded where video_encoded.encode_status=1 and video_encoded.server_name='%s' and video_encoded.vhash not in (%s) order by priority, video_encoded.weight, t_created limit 1;" % (server_name, skip_vhash) )
 	results=cursor.fetchall()
 	# Any videos pending?
 	for registry in results:
