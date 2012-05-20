@@ -192,9 +192,6 @@ Many sites can be configured in the same fashion. We will extend this README.
 	* * * * * python /var/www/html/ufe/ufe-recycle.py -r original > /var/tmp/ufe-recycle_original.log 2>&1
 	* * * * * python /var/www/html/ufe/ufe-recycle.py -r registers >/var/tmp/ufe-recycle_registers.log 2>&1
 	* * * * * python /var/www/html/ufe/ufe-recycle.py -r nonvideos >/var/tmp/ufe-recycle_nonvideos.log 2>&1
-	# UFE : Cleans .xml and .err files created by "pymediainfo"
-	* * * * * find /tmp/*.xml -mmin +5 -ls -delete > /var/tmp/ufe-mediainfo_expire_xml.log 2>&1
-	* * * * * find /tmp/*.err -mmin +5 -ls -delete > /var/tmp/ufe-mediainfo_expire_err.log 2>&1
 	
 -------------------------------------------------------------------------------
 	Contact us if you want to use inotify to monitor last access of
