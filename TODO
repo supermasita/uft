@@ -24,3 +24,7 @@
 - DONE! skip transcoding if video matches target quality
 - DONE! Modify pymediainfo to erase temp files
 - DONE! Modify pymediainfo to accept filenames with spaces
+- DONE! vp priority
++ improve json control, all
++ encode progress
++ Modify pymediainfo to accept filenames with "ñ"
