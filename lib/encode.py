@@ -8,13 +8,13 @@
 
 from config import *
 from common import *
+from control import status_check
 
 import os
 import MySQLdb
 import time
 import datetime
 import subprocess
-import simplejson
 
 #
 ##
@@ -150,63 +150,12 @@ def encode_video_ffmpeg(e_vhash, e_vpid, e_filename_san, e_encode_file, e_param)
 
 
 def create_video_json_file(vhash) :
-	"""Creates JSON file with the encoded videos profile specs. Usefull to create adaptative
+	"""Creates JSON file with status_check() from ufe-control. Usefull to create adaptative
 	   video playlists.
 	"""
-	db=MySQLdb.connect(host=db_host, user=db_user, passwd=db_pass, db=db_database )
-	cursor=db.cursor()
-	# Create dictionary with video profiles specs
-	cursor.execute("SELECT vpid, profile_name, video_br, video_h, video_w from video_profile;")
-	video_profiles = {}
-	# Loop query result and fill dictionary
-	while (1):
-		result = cursor.fetchone()
-		if result == None: break
-		#
-		video_profiles["%i" % result[0]] = { "profile_name" : result[1],  "video_br" : "%i" % result[2], "video_h" : "%i" % result[3], "video_w" : "%i" % result[4] }
-	# Create dictionary with all the encoded videos of a given vhash
-	cursor.execute("SELECT vpid, encode_file, encode_status, ftp_path from video_encoded where vhash='%s';" % vhash)
-	video_json = {}
-	# Loop query result and fill dictionary
-	while (1):
-		result = cursor.fetchone()
-		if result == None: break
-		#
-		video_json[video_profiles["%i" % result[0]]["profile_name"]] = { "file" : result[1], "ftp_path" : result[3], "encode_status" : result[2], "video_br" : video_profiles["%i" % result[0]]["video_br"], "video_h" : video_profiles["%i" % result[0]]["video_h"], "video_w" : video_profiles["%i" % result[0]]["video_w"] }
-	# Close cursor and DB conn
-	cursor.close ()
-	db.close()
 	# Create JSON file
-	video_json_content = simplejson.dumps(video_json, indent=4, sort_keys=True)
+	video_json_content = status_check(vhash)	
+	#video_json_content = simplejson.dumps(video_json, indent=4, sort_keys=True)
 	video_json_file = open("%s%s/%s.json" % (encoded, vhash, vhash), 'w')
 	video_json_file.write(video_json_content)
-
-
-#def check_and_encode() :
-#	"""Checks for pending videos and encodes them.
-#	"""
-#	check_pending = 1
-#	# Loop to find queued videos
-#	while check_pending == 1 :
-#		# Test max number of allowed encode instances
-#		max_ps_reached = check_running_ps()
-#		if max_ps_reached == 0 :
-#			update_running_ps("add")
-#			# Are there any pending videos?
-#			pending_encode = select_next_encode()[0]
-#			if pending_encode == 1 :
-#				# Nasty random wait to avoid two servers asking for the same video :S
-#				random_wait()
-#				# Get data for next encode and process 
-#				pending_encode, vhash, vpid, encode_status, filename_san, encode_file, param = select_next_encode()
-#				encode_video_ffmpeg(vhash, vpid, filename_san, encode_file, param)
-#				# Spawn ftp.py
-#				spawn_process("upload")
-#			else :
-#				print "No videos left to encode."
-#				check_pending=0
-#			update_running_ps("substract")
-#		else :
-#			logthis('Max. allowed instances reached.')
-#			check_pending = 0
-
+	video_json_file.close()	

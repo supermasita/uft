@@ -5,13 +5,10 @@
 # https://github.com/supermasita/ufe  
 # 
 
-"""
-Function library for ufe-add.py
-"""
-
 from config import *
 from common import *
 from upymediainfo import MediaInfo
+from encode import create_video_json_file
 
 import os
 import MySQLdb
@@ -19,10 +16,6 @@ import datetime
 import hashlib
 import time
 import shutil
-#import sys
-#import simplejson
-#import getopt
-
 
 #
 ##
@@ -171,7 +164,7 @@ def create_video_registry(vhash, filename_orig, filename_san, video_br, video_w,
                         if not os.path.exists('%s/%s' % (encoded, vhash)):
 	                        os.makedirs('%s/%s' % (encoded, vhash))
 			# Copy file with vp name
-			shutil.copy(os.path.join(root,file), "%s/%s/%s" % (encoded, vhash, encode_file))		
+			shutil.copy(os.path.join(root,file), "%s/%s/%s" % (encoded, vhash, encode_file))
 			# Create fake FFMPEG log
 			log_filename = "%s-%s.log" % (filename_san_n, profile_name)
 			log_file = open("%s/%s/%s" % (encoded, vhash, log_filename), "w")
@@ -182,6 +175,9 @@ def create_video_registry(vhash, filename_orig, filename_san, video_br, video_w,
 			# We insert registrys for each video profile
                 	cursor.execute("insert into video_encoded set vhash='%s', vpid=%i, encode_file='%s', t_created='%s', weight=%i, ftp_path='%s', site_id=%i, server_name='%s', priority='%s';" % (vhash, vpid, encode_file, t_created, weight, ftp_path, site_id, server_name, priority) )
 		db.commit ()
+                # Create json
+                create_video_json_file(vhash)
+		#
 		logthis('Registry added for %s' % encode_file)	
 		# We add 1 to the total quantity of profiles for video
 		vp_total=vp_total+1
