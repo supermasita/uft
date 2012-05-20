@@ -8,17 +8,20 @@
 from lib.config import *
 from lib.add import *
 from lib.common import *
-#from lib.upymediainfo import MediaInfo
 
-#import os
+#
+##
+###
+
 import MySQLdb
-#import datetime
-#import hashlib
-#import time
 import shutil
 import sys
 import simplejson
 import getopt
+
+#
+##
+###
 
 def ufe_add_usage():
         """Prints the usage of "ufe-add".
@@ -147,7 +150,6 @@ if vars().has_key('add') and vars().has_key('site_name') and vars().has_key('fil
 								# If its a video, spawn encode
                                                                 if not vars().has_key('spawn') :
                                                                         spawn = False
-									print spawn
 
 						except:
 							pass

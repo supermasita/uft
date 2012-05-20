@@ -41,7 +41,7 @@ def recycle_nonvideos():
         cursor.execute("SELECT vhash, filename_san FROM video_original where video_br is null and video_w is null and server_name='%s';" % server_name )
 	results = cursor.fetchall()
 	#	
-	if len(results) > 1 :
+	if len(results) >= 1 :
 		#	
 		for vhash, filename in results :
 			print vhash, filename
