@@ -22,3 +22,5 @@
   metadata)
 + Deprecate "vp_done, vp_run, vp_total, vp_error"
 - DONE! skip transcoding if video matches target quality
+- DONE! Modify pymediainfo to erase temp files
+- DONE! Modify pymediainfo to accept filenames with spaces
