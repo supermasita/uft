@@ -153,6 +153,9 @@ def create_video_json_file(vhash) :
 	"""Creates JSON file with status_check() from ufe-control. Usefull to create adaptative
 	   video playlists.
 	"""
+	# Check existance of dir
+	if not os.path.exists("%s/%s" % (encoded, vhash)):
+		os.makedirs("%s/%s" % (encoded, vhash))
 	# Create JSON file
 	video_json_content = status_check(vhash)	
 	#video_json_content = simplejson.dumps(video_json, indent=4, sort_keys=True)
