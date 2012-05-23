@@ -11,7 +11,11 @@ from common import *
 import os
 import shutil
 
-def recycle_old_registers(interval=2880):
+#
+##
+###
+
+def recycle_old_registers(interval=5):
         """Removes registers from DB of videos that have already been recycled.
 	"""
 	db=MySQLdb.connect(host=db_host, user=db_user, passwd=db_pass, db=db_database )
@@ -62,7 +66,7 @@ def recycle_nonvideos():
         db.close ()
 
 
-def select_next_original_recycle(interval=15):
+def select_next_original_recycle(interval=5):
         """Finds original videos whose encoded videos have been already recycled and deletes them.
         """
         db=MySQLdb.connect(host=db_host, user=db_user, passwd=db_pass, db=db_database )
@@ -123,7 +127,7 @@ def update_original_recycle_status(state, u_vhash):
         db.close ()
 
 
-def select_next_encoded_recycle(interval=15):
+def select_next_encoded_recycle(interval=5):
 	"""Finds already uploaded encoded videos and deletes them.
 	"""
         db=MySQLdb.connect(host=db_host, user=db_user, passwd=db_pass, db=db_database )
