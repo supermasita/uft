@@ -8,6 +8,7 @@
 from lib.config import *
 from lib.add import *
 from lib.common import *
+from lib.control import status_check
 
 #
 ##
@@ -83,9 +84,11 @@ if vars().has_key('add') and vars().has_key('site_name') and vars().has_key('fil
 			# Move file and create thumbnail blob
 			move_original_file(file_path_only, file_name_only, filename_san)
 			create_thumbnail(vhash, filename_san)
-			logthis('%s was added as  %s for %s' % (filename_orig, filename_san, site_name))
-			video_json = { "vhash":vhash, "filename_orig":filename_orig, "filename_san":filename_san, "video_br":video_br, "video_w":video_w, "video_h":video_h, "aspect_r":round(aspect_r, 2), "duration":duration, "size":size, "site_id":site_id, "server_name":server_name }
-			print simplejson.dumps(video_json, indent=4, sort_keys=True)
+			logthis('%s was added as  %s for %s' % (filename_orig, filename_san, site_name), stdout=0)
+			#video_json = { "vhash":vhash, "filename_orig":filename_orig, "filename_san":filename_san, "video_br":video_br, "video_w":video_w, "video_h":video_h, "aspect_r":round(aspect_r, 2), "duration":duration, "size":size, "site_id":site_id, "server_name":server_name }
+			#print simplejson.dumps(video_json, indent=4, sort_keys=True)
+			indented_status_json = status_check(vhash)
+			print indented_status_json
                         # If its a video, spawn encode
                         if not vars().has_key('spawn') :
                                 spawn = False
