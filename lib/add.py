@@ -175,12 +175,12 @@ def create_video_registry(vhash, filename_orig, filename_san, video_br, video_w,
 			# We insert registrys for each video profile
                 	cursor.execute("insert into video_encoded set vhash='%s', vpid=%i, encode_file='%s', t_created='%s', weight=%i, ftp_path='%s', site_id=%i, server_name='%s', priority='%s';" % (vhash, vpid, encode_file, t_created, weight, ftp_path, site_id, server_name, priority) )
 		db.commit ()
-                # Create json
-                create_video_json_file(vhash)
 		#
 		logthis('Registry added for %s' % encode_file)	
 		# We add 1 to the total quantity of profiles for video
 		vp_total=vp_total+1
+	# Create json
+        create_video_json_file(vhash)
         # Update the total quantity of profiles for video
 	cursor.execute("update video_original set vp_total=%i where vhash='%s';" % (vp_total, vhash) )
 	db.commit ()

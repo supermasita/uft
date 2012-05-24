@@ -107,8 +107,8 @@ def encode_video_ffmpeg(e_vhash, e_vpid, e_filename_san, e_encode_file, e_param)
 	# Log path and filename 
 	e_encode_file_name, e_encode_file_e = os.path.splitext(e_encode_file)
 	e_encode_file_log = "%s%s/%s.log" % (encoded, e_vhash, e_encode_file_name)
-	# FFMPEG command
-	#command='%s -i %s %s %s' % (ffmpeg_bin, source, e_param, destination)
+	# 
+	update_running_ps("add")
 	try :
 		logthis("Encode started : %s" % e_encode_file)
 		# FFMPEG - Arguments to list in order to use subprocess
@@ -145,6 +145,8 @@ def encode_video_ffmpeg(e_vhash, e_vpid, e_filename_san, e_encode_file, e_param)
 			except :
 				logthis("JSON failed : %s" % e_vhash)
 				pass
+	#
+	update_running_ps("substract")
         return output
 
 
@@ -158,7 +160,6 @@ def create_video_json_file(vhash) :
 		os.makedirs("%s/%s" % (encoded, vhash))
 	# Create JSON file
 	video_json_content = status_check(vhash)	
-	#video_json_content = simplejson.dumps(video_json, indent=4, sort_keys=True)
 	video_json_file = open("%s%s/%s.json" % (encoded, vhash, vhash), 'w')
 	video_json_file.write(video_json_content)
 	video_json_file.close()	
