@@ -1,5 +1,5 @@
 #!/usr/bin/python
-# coding: utf-8
+# -*- coding: utf-8 -*-
 #
 # UNATTENDED FFMPEG ENCODER
 # https://github.com/supermasita/ufe
@@ -20,7 +20,6 @@ while check_pending == 1 :
 	# Test max number of allowed encode instances
 	max_ps_reached = check_running_ps()
 	if max_ps_reached == 0 :
-		#update_running_ps("add")
 		# Are there any pending videos?
 		pending_encode = select_next_encode()[0]
 		if pending_encode == 1 :
@@ -32,10 +31,7 @@ while check_pending == 1 :
 			# Spawn ftp.py
 			spawn_process("upload")
 		else :
-			print "No videos left to encode."
 			check_pending=0
-		#update_running_ps("substract")
 	else : 
-		logthis('Max. allowed instances reached.')
 		check_pending = 0
 

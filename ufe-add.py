@@ -1,5 +1,5 @@
 #!/usr/bin/python
-# coding: utf-8
+# -*- coding: utf-8 -*-
 #
 # UNATTENDED FFMPEG ENCODER
 # https://github.com/supermasita/ufe  
@@ -63,13 +63,13 @@ IMPROVE THIS!!!
 
 # Check if all needed variables are set
 if vars().has_key('add') and vars().has_key('site_name') and vars().has_key('file_full_path') :
+	# Tell me something about the site
+        site_name, site_id, site_enabled, vp_priority = get_site(site_name)
+	#
+        file_name_only = file_full_path.split("/")[-1]
+	file_path_only = "/".join(file_full_path.split("/")[:-1])+"/"
 	#
 	if add == 'file' :
-		#        
-        	file_name_only = file_full_path.split("/")[-1]
-	        file_path_only = "/".join(file_full_path.split("/")[:-1])+"/"
-		# Tell me something about the site
-		site_name, site_id, site_enabled, vp_priority = get_site(site_name)
 		# Check metada to know if its a video
 		isvideo, video_br, video_w, video_h, aspect_r, duration, size, total_br, audio_br, video_f, audio_f = media_check(file_full_path)
 		if isvideo == True :
@@ -84,14 +84,12 @@ if vars().has_key('add') and vars().has_key('site_name') and vars().has_key('fil
 			# Move file and create thumbnail blob
 			move_original_file(file_path_only, file_name_only, filename_san)
 			create_thumbnail(vhash, filename_san)
-			logthis('%s was added as  %s for %s' % (filename_orig, filename_san, site_name), stdout=0)
-			#video_json = { "vhash":vhash, "filename_orig":filename_orig, "filename_san":filename_san, "video_br":video_br, "video_w":video_w, "video_h":video_h, "aspect_r":round(aspect_r, 2), "duration":duration, "size":size, "site_id":site_id, "server_name":server_name }
-			#print simplejson.dumps(video_json, indent=4, sort_keys=True)
+			logthis('%s was added as %s for %s' % (filename_orig, filename_san, site_name))
 			indented_status_json = status_check(vhash)
 			print indented_status_json
                         # If its a video, spawn encode
                         if not vars().has_key('spawn') :
-                                spawn = False
+                                spawn = True
 		else :
 			# Video hash 
 			vhash = create_vhash(file_name_only, site_name)
@@ -100,22 +98,18 @@ if vars().has_key('add') and vars().has_key('site_name') and vars().has_key('fil
 			# Insert registers in DB
 			create_nonvideo_registry(vhash, filename_orig, filename_san, site_id, server_name)
 			move_original_file(file_path_only, file_name_only, filename_san)
-			logthis('Couldn\'t add %s :  not enough metadata or not a video.' % file_name_only)
-			# If its a video, spawn encode
+			logthis('Couldn\'t add %s : not enough metadata or not a video.' % file_name_only)
+			# Don't spawn
 			if not vars().has_key('spawn') :
 				spawn = False
 	#
 	elif add == 'dir' :
-	        #        
-        	file_path_only = "/".join(file_full_path.split("/")[:-1])+"/"
-		# Tell me something about the site
-                site_name, site_id, site_enabled, vp_priority = get_site(site_name)
 		# Initialize spawn
 		spawn = False 
 		# Check PID file 
 		pidfilename = "%s/ufe-add-dir.pid" % tmppath
 		if os.path.isfile(pidfilename):
-			logthis('%s already exists. The process should be running.' % pidfile)
+			logthis('%s already exists. The process should be running.' % pidfilename, stdout=1)
 			sys.exit()
 		else:
 			# Create PID
@@ -156,7 +150,7 @@ if vars().has_key('add') and vars().has_key('site_name') and vars().has_key('fil
 								create_nonvideo_registry(vhash, filename_orig, filename_san, site_id, server_name)
 								move_original_file(root, file, filename_san)
 								logthis('Couldn\'t add %s : not enough metadata or not a video.' % file)
-								# If its a video, spawn encode
+								# Don't spawn
                                                                 if not vars().has_key('spawn') :
                                                                         spawn = False
 

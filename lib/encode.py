@@ -1,10 +1,9 @@
 #!/usr/bin/python
-# coding: utf-8
+# -*- coding: utf-8 -*-
 #
 # UNATTENDED FFMPEG ENCODER
 # https://github.com/supermasita/ufe
 # 
-
 
 from config import *
 from common import *
@@ -63,6 +62,7 @@ def select_next_encode():
 		pending_encode=1
         else :
                 pending_encode = vhash = vpid = encode_status = filename_san = encode_file = param = 0
+		logthis("No videos left to encode, or already assigned process for vhash.")
         cursor.close ()
 	db.close ()
 	return pending_encode, vhash, vpid, encode_status, filename_san, encode_file, param
@@ -138,13 +138,12 @@ def encode_video_ffmpeg(e_vhash, e_vpid, e_filename_san, e_encode_file, e_param)
 		update_encode_status(3, e_vhash, e_vpid)
 		update_vp_quantity(-1, 'vp_run', e_vhash)
 		# Try to create JSON file
-		if create_video_json is True :
-			try :
-				create_video_json_file(e_vhash)
-				logthis("JSON created : %s" % e_vhash)
-			except :
-				logthis("JSON failed : %s" % e_vhash)
-				pass
+		try :
+			create_video_json_file(e_vhash)
+			logthis("JSON created : %s" % e_vhash)
+		except :
+			logthis("JSON failed : %s" % e_vhash)
+			pass
 	#
 	update_running_ps("substract")
         return output

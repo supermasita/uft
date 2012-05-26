@@ -1,5 +1,10 @@
 #!/usr/bin/python
-# coding: utf-8
+# -*- coding: utf-8 -*-
+#
+# UNATTENDED FFMPEG ENCODER
+# https://github.com/supermasita/ufe
+# 
+
 
 from config import *
 
@@ -9,6 +14,9 @@ import random
 import subprocess
 import syslog
 
+#
+##
+###
 
 def logthis(message, stdout=1) :
         """Writes message to SYSLOG and prints it to STDOUT, if u want.
@@ -46,6 +54,7 @@ def check_running_ps():
                 max_ps=registry[6]
         if running_ps>=max_ps :
                 max_ps_reached=1
+		logthis("Max. allowed processes reachead.")
         else :
                 max_ps_reached=0
 	return max_ps_reached
@@ -77,7 +86,7 @@ def spawn_process(process) :
 		logthis('Spawned %s with PID %i' % (process, pid))
 	else:
 		logthis('No process named %s !' % process)
-
+	logthis("%s spawned" % process)
 
 def update_vp_quantity(u_quantity, u_vp_status, u_vhash):
 	"""Increments or decrements the total of video profiles with for the vhash on the video_original table.

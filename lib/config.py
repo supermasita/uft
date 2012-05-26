@@ -1,5 +1,9 @@
 #!/usr/bin/python
-# coding: utf-8
+# -*- coding: utf-8 -*-
+#
+# UNATTENDED FFMPEG ENCODER
+# https://github.com/supermasita/ufe
+# 
 
 # Core root
 core_root = "/var/www/html/ufe/"

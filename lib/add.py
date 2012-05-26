@@ -1,5 +1,5 @@
 #!/usr/bin/python
-# coding: utf-8
+# -*- coding: utf-8 -*-
 #
 # UNATTENDED FFMPEG ENCODER
 # https://github.com/supermasita/ufe  
@@ -60,16 +60,25 @@ def media_check(file) :
 			audio_f = track.format
 			audio_br = track.bit_rate
 	# If there no video_br use the total_br
-	#if not vars().has_key('video_br'):
-	#	video_br = total_br
+	if not vars().has_key('video_br'):
+		video_br = total_br
+	elif video_br is None : 
+                video_br = total_br
+        # No audio meta? 
+	if not vars().has_key('audio_br'):
+                audio_br = 0
+        elif audio_br is None :
+                audio_br = 0
 	# Check if its has overall bitrate and video width - we need it to choose video profiles        
         if vars().has_key('video_br') and vars().has_key('video_w'):
                 isvideo = True
         else :
-		isvideo = False 
+		isvideo = False
         	video_br, video_w, video_h, aspect_r, duration, size, total_br, audio_br = 0,0,0,0,0,0,0,0
 		video_f = "none"
 		audio_f = "none"
+                #
+                logthis('%s : not enough metadata; %s, %s, %s, %s, %s, %s, %s, %s, %s, %s' % (file, video_br, video_w, video_h, aspect_r, duration, size, total_br, audio_br, video_f, audio_f), stdout=0)
 	return isvideo, video_br, video_w, video_h, aspect_r, duration, size, total_br, audio_br, video_f, audio_f 
 
 
@@ -92,7 +101,7 @@ def create_filename_san(file, vhash) :
         sanitize_list = [' ', 'ñ', '(', ')', '[', ']', '{', '}', 'á', 'é', 'í', 'ó', 'ú', '?', '¿', '!', '¡']
         for item in sanitize_list :
                 filename_san = filename_san.replace(item.decode("utf-8"), '_')
-        filename_san = "%s-%s%s" % (filename_san, vhash, filename_orig_e)
+        filename_san = "%s-%s%s" % (filename_san[:20], vhash, filename_orig_e)
         return filename_san, filename_orig
 
 
