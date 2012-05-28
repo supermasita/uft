@@ -206,22 +206,24 @@ else:
 				# Upload video
 				logthis('Uploading  %s/%s/%s/%s/%s' % (year, month, day, vhash, encode_file))
 				shutil.copy('%s%s/%s' % (encoded, vhash, encode_file), '%s/%s/%s/%s' % (local_folder, ftp_path, vhash, encode_file))
+				os.chmod('%s/%s/%s/%s' % (local_folder, ftp_path, vhash, encode_file), 0644)
 				logthis('Uploaded  %s/%s/%s/%s/%s' % (year, month, day, vhash, encode_file))
 				# Upload FFMPEG log
 				encode_file_name, encode_file_ext = os.path.splitext(encode_file)
 				encode_file_log = "%s.log" % encode_file_name	
 				logthis('Uploading  %s/%s/%s/%s/%s' % (year, month, day, vhash, encode_file_log))
 				shutil.copy('%s/%s/%s' % (encoded, vhash, encode_file_log), '%s/%s/%s/%s' % (local_folder, ftp_path, vhash, encode_file_log))
+				os.chmod('%s/%s/%s/%s' % (local_folder, ftp_path, vhash, encode_file_log), 0644)
 				logthis('Uploaded  %s/%s/%s/%s/%s' % (year, month, day, vhash, encode_file_log))			
 				# Upload JSON
-				if create_video_json is True :
-					try :
-						encode_file_json = "%s.json" % vhash
-						logthis('Uploading  %s/%s/%s/%s/%s' % (year, month, day, vhash, encode_file_json))
-						shutil.copy('%s/%s/%s' % (encoded, vhash, encode_file_json), '%s/%s/%s/%s' % (local_folder, ftp_path, vhash, encode_file_json))
-						logthis('Uploaded  %s/%s/%s/%s/%s' % (year, month, day, vhash, encode_file_json))
-					except :
-						pass
+				try :
+					encode_file_json = "%s.json" % vhash
+					logthis('Uploading  %s/%s/%s/%s/%s' % (year, month, day, vhash, encode_file_json))
+					shutil.copy('%s/%s/%s' % (encoded, vhash, encode_file_json), '%s/%s/%s/%s' % (local_folder, ftp_path, vhash, encode_file_json))
+					os.chmod('%s/%s/%s/%s' % (local_folder, ftp_path, vhash, encode_file_json), 0644)
+					logthis('Uploaded  %s/%s/%s/%s/%s' % (year, month, day, vhash, encode_file_json))
+				except :
+					pass
 				# Update status
 				update_ftp_status(3, vhash, vpid)
 				update_vp_quantity(1, 'vp_done', vhash)
