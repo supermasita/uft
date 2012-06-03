@@ -102,11 +102,11 @@ def encode_video_ffmpeg(e_vhash, e_vpid, e_filename_san, e_encode_file, e_param)
         if not os.path.exists('%s%s' % (encoded, e_vhash)):
                 os.makedirs('%s%s' % (encoded, e_vhash))
         # Source and destination for FFMPEG
-        source = "%s%s" % (original, e_filename_san)
-        destination = "%s%s/%s" % (encoded, e_vhash, e_encode_file)
+        source = "%s/%s" % (original, e_filename_san)
+        destination = "%s/%s/%s" % (encoded, e_vhash, e_encode_file)
 	# Log path and filename 
 	e_encode_file_name, e_encode_file_e = os.path.splitext(e_encode_file)
-	e_encode_file_log = "%s%s/%s.log" % (encoded, e_vhash, e_encode_file_name)
+	e_encode_file_log = "%s/%s/%s.log" % (encoded, e_vhash, e_encode_file_name)
 	# 
 	update_running_ps("add")
 	try :
@@ -129,9 +129,9 @@ def encode_video_ffmpeg(e_vhash, e_vpid, e_filename_san, e_encode_file, e_param)
 		logthis("Encode successful : %s" % e_encode_file)
 		logthis("Hinting started : %s" % e_encode_file)
                 # We use qt-faststart for hinting
-                qt_command = '%slib/qt-faststart.py %s' % (core_root, destination)
+                qt_command = '%s/lib/qt-faststart.py %s' % (core_root, destination)
                 qt_commandlist = qt_command.split(" ")
-		qt_log_file = open("%s%s/%s.qt.log" % (encoded, e_vhash, e_encode_file_name), "wb")
+		qt_log_file = open("%s/%s/%s.qt.log" % (encoded, e_vhash, e_encode_file_name), "wb")
 		qt_output = subprocess.call(qt_commandlist, stderr=qt_log_file, stdout=qt_log_file)
 		#
 		logthis("Hinting successful : %s" % e_encode_file)
@@ -159,6 +159,6 @@ def create_video_json_file(vhash) :
 		os.makedirs("%s/%s" % (encoded, vhash))
 	# Create JSON file
 	video_json_content = status_check(vhash)	
-	video_json_file = open("%s%s/%s.json" % (encoded, vhash, vhash), 'w')
+	video_json_file = open("%s/%s/%s.json" % (encoded, vhash, vhash), 'w')
 	video_json_file.write(video_json_content)
 	video_json_file.close()	

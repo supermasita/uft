@@ -71,7 +71,7 @@ if vars().has_key('add') and vars().has_key('site_name') and vars().has_key('fil
 	#
 	if add == 'file' :
 		# Check metada to know if its a video
-		isvideo, video_br, video_w, video_h, aspect_r, duration, size, total_br, audio_br, video_f, audio_f = media_check(file_full_path)
+		isvideo, video_br, video_w, video_h, aspect_r, duration, size, total_br, audio_br, video_f, audio_f, file_format = media_check(file_full_path)
 		if isvideo == True :
 			# Video hash 
 			vhash = create_vhash(file_name_only, site_name)
@@ -80,11 +80,11 @@ if vars().has_key('add') and vars().has_key('site_name') and vars().has_key('fil
 			# Insert registers in DB
 			root = file_path_only
 			file = file_name_only
-			create_video_registry(vhash, filename_orig, filename_san, video_br, video_w, video_h, aspect_r, duration, size, site_id, server_name, total_br, audio_br, video_f, audio_f, root, file, vp_priority)
+			create_video_registry(vhash, filename_orig, filename_san, video_br, video_w, video_h, aspect_r, duration, size, site_id, server_name, total_br, audio_br, video_f, audio_f, root, file, vp_priority, file_format)
 			# Move file and create thumbnail blob
 			move_original_file(file_path_only, file_name_only, filename_san)
 			create_thumbnail(vhash, filename_san)
-			logthis('%s was added as %s for %s' % (filename_orig, filename_san, site_name))
+			logthis('%s was added as %s for %s' % (filename_orig, filename_san, site_name), stdout=0)
 			indented_status_json = status_check(vhash)
 			print indented_status_json
                         # If its a video, spawn encode
@@ -126,18 +126,18 @@ if vars().has_key('add') and vars().has_key('site_name') and vars().has_key('fil
 					if timedif > timedif_to :
 						try:
 							# Check metada to know if it si a video
-							isvideo, video_br, video_w, video_h, aspect_r, duration, size, total_br, audio_br, video_f, audio_f = media_check('%s' % file_complete)
+							isvideo, video_br, video_w, video_h, aspect_r, duration, size, total_br, audio_br, video_f, audio_f, file_format = media_check('%s' % file_complete)
 							if isvideo is True :
 								# Video hash 
 								vhash = create_vhash(file, site_name)
 								# Append original filename (with vhash appended) and sanitized filename
 								filename_san, filename_orig = create_filename_san(file, vhash)
 								# Insert registers in DB
-								create_video_registry(vhash, filename_orig, filename_san, video_br, video_w, video_h, aspect_r, duration, size, site_id, server_name, total_br, audio_br, video_f, audio_f, root, file, vp_priority)
+								create_video_registry(vhash, filename_orig, filename_san, video_br, video_w, video_h, aspect_r, duration, size, site_id, server_name, total_br, audio_br, video_f, audio_f, root, file, vp_priority, file_format)
 								# Move file and create thumbnail blob
 								move_original_file(root, file, filename_san)
 								create_thumbnail(vhash, filename_san)
-								logthis('%s was added as  %s for %s' % (filename_orig, filename_san, site))
+								logthis('%s was added as  %s for %s' % (filename_orig, filename_san, site), stdout=0)
 								# If its a video, spawn encode
 								if not vars().has_key('spawn') :
 									spawn = True
