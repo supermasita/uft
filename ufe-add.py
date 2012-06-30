@@ -81,9 +81,11 @@ if vars().has_key('add') and vars().has_key('site_name') and vars().has_key('fil
 			root = file_path_only
 			file = file_name_only
 			create_video_registry(vhash, filename_orig, filename_san, video_br, video_w, video_h, aspect_r, duration, size, site_id, server_name, total_br, audio_br, video_f, audio_f, root, file, vp_priority, file_format)
-			# Move file and create thumbnail blob
+			# Move file
 			move_original_file(file_path_only, file_name_only, filename_san)
-			create_thumbnail(vhash, filename_san)
+                        # Create thumbnails 
+                        create_thumbnail(vhash, filename_san)
+                        create_thumbnail_blob(vhash, filename_san)
 			logthis('%s was added as %s for %s' % (filename_orig, filename_san, site_name), stdout=0)
 			indented_status_json = status_check(vhash)
 			print indented_status_json
@@ -134,9 +136,11 @@ if vars().has_key('add') and vars().has_key('site_name') and vars().has_key('fil
 								filename_san, filename_orig = create_filename_san(file, vhash)
 								# Insert registers in DB
 								create_video_registry(vhash, filename_orig, filename_san, video_br, video_w, video_h, aspect_r, duration, size, site_id, server_name, total_br, audio_br, video_f, audio_f, root, file, vp_priority, file_format)
-								# Move file and create thumbnail blob
+								# Move file
 								move_original_file(root, file, filename_san)
+								# Create thumbnails 
 								create_thumbnail(vhash, filename_san)
+								create_thumbnail_blob(vhash, filename_san)
 								logthis('%s was added as  %s for %s' % (filename_orig, filename_san, site), stdout=0)
 								# If its a video, spawn encode
 								if not vars().has_key('spawn') :

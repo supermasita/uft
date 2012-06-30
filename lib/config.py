@@ -32,3 +32,8 @@ ffmpeg_bin = "/usr/bin/ffmpeg"
 
 # Create JSON? (True or False)
 create_video_json = True
+
+# Dimensions for thumbnail created by create_thumbnail function
+# (pixels, integer)
+thumbnail_width = 600 
+thumbnail_height = 338

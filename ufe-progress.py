@@ -1,4 +1,9 @@
-# coding: utf-8
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+#
+# UNATTENDED FFMPEG ENCODER
+# https://github.com/supermasita/ufe  
+# 
 
 import re
 import os
