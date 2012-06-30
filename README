@@ -187,6 +187,8 @@ Many sites can be configured in the same fashion. We will extend this README.
 	* * * * * python /var/www/html/ufe/ufe-add.py -a dir -s default -f /var/tmp/videos/ > /var/tmp/ufe-add.log 2>&1
 	* * * * * python /var/www/html/ufe/ufe-encode.py > /var/tmp/ufe-encode.log 2>&1
 	* * * * * python /var/www/html/ufe/ufe-upload.py > /var/tmp/ufe-upload.log 2>&1
+	# (next line only if u want estimate encode progress on DB)
+	* * * * * python /var/www/html/ufe/ufe-progress.py > /var/tmp/ufe-progress.log 2>&1
 	# UFE : RECYCLING
 	* * * * * python /var/www/html/ufe/ufe-recycle.py -r encoded > /var/tmp/ufe-recycle_encoded.log 2>&1
 	* * * * * python /var/www/html/ufe/ufe-recycle.py -r original > /var/tmp/ufe-recycle_original.log 2>&1
@@ -194,8 +196,10 @@ Many sites can be configured in the same fashion. We will extend this README.
 	* * * * * python /var/www/html/ufe/ufe-recycle.py -r nonvideos >/var/tmp/ufe-recycle_nonvideos.log 2>&1
 	
 -------------------------------------------------------------------------------
-	Contact us if you want to use inotify to monitor last access of
-	files with INCRON ( http://inotify.aiken.cz/ )
+	ALTERNATIVE IDEAS
+	* You could use inotify to monitor last access of files with INCRON 
+	  ( http://inotify.aiken.cz/ )
+	* You could use DAEMON TOOLS ( http://cr.yp.to/daemontools.html )
 -------------------------------------------------------------------------------
 
 3. USING UFE

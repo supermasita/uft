@@ -107,6 +107,7 @@ CREATE TABLE `video_encoded` (
   `ftp_time` timestamp NULL default '0000-00-00 00:00:00',
   `ftp_path` varchar(120) NOT NULL default '',
   `recycle_time` timestamp NULL default '0000-00-00 00:00:00',
+  `encode_percent` float default NULL,
   PRIMARY KEY  (`vhash`,`vpid`),
   KEY `idx_status` (`encode_status`),
   KEY `idx_vhash` (`vhash`),
@@ -217,4 +218,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2012-06-03 22:33:28
+-- Dump completed on 2012-06-06  5:41:31

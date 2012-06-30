@@ -2,10 +2,22 @@
 - DONE! create ufe-recycle with parameters, to the 3 recycling
   script we have
 - DONE! create ufe-control (use vhash as parameter to check status)
-+ check encode errors and do something
-+ replace ufe-ftp with ufe-upload, with option to use ftp or
+- DONE! replace ufe-ftp with ufe-upload, with option to use ftp or
   move to folder
-	video_encoded 
+- DONE! what to do if uploaded file is not a video? (has insufficient
+  metadata)
+- DONE! skip transcoding if video matches target quality
+- DONE! Modify pymediainfo to erase temp files
+- DONE! Modify pymediainfo to accept filenames with spaces
+- DONE! vp priority
+- DONE! encode progress
+- DONE! Atomic uploads
+- DONE! create video thumbnail in video_encoded directory
+
+
++ check encode errors and do something
++ Rename DB columns:
+	* video_encoded 
 		-ftp_status
 		-ftp_time
 		-ftp_path
@@ -13,18 +25,11 @@
 		+upload_time
 		+upload_path
 
-	sites
+	* sites
 		-incoming_path
 		+ftp_enabled
 		+upload_folder
-
-- DONE! what to do if uploaded file is not a video? (has insufficient
-  metadata)
 + Deprecate "vp_done, vp_run, vp_total, vp_error"
-- DONE! skip transcoding if video matches target quality
-- DONE! Modify pymediainfo to erase temp files
-- DONE! Modify pymediainfo to accept filenames with spaces
-- DONE! vp priority
 + improve json control, all
-+ encode progress
-+ Modify pymediainfo to accept filenames with "ñ"
++ Modify pymediainfo to accept filenames with "ñ" or "á"
++ Atomic ftp uploads

@@ -176,16 +176,23 @@ else:
 					ftp.storbinary('STOR ' + encode_file_log, ftp_file_log)
 					logthis('Uploaded  %s/%s/%s/%s/%s' % (year, month, day, vhash, encode_file_log))
 					# Upload JSON
-					if create_video_json is True :
-						try :
-							encode_file_json = "%s.json" % vhash
-							logthis('Uploading  %s/%s/%s/%s/%s' % (year, month, day, vhash, encode_file_json))
-							ftp_file_json = open( '%s%s/%s' % (encoded, vhash, encode_file_json),'rb')
-							ftp.storbinary('STOR ' + encode_file_json, ftp_file_json)
-							logthis('Uploaded  %s/%s/%s/%s/%s' % (year, month, day, vhash, encode_file_json))
-						except :
-							pass
-
+					try :
+						encode_file_json = "%s.json" % vhash
+						logthis('Uploading  %s/%s/%s/%s/%s' % (year, month, day, vhash, encode_file_json))
+						ftp_file_json = open( '%s%s/%s' % (encoded, vhash, encode_file_json),'rb')
+						ftp.storbinary('STOR ' + encode_file_json, ftp_file_json)
+						logthis('Uploaded  %s/%s/%s/%s/%s' % (year, month, day, vhash, encode_file_json))
+					except :
+						pass
+					# Upload thumbnail
+					try :
+						encode_file_thumbnail = "%s.jpg" % vhash
+						logthis('Uploading  %s/%s/%s/%s/%s' % (year, month, day, vhash, encode_file_thumbnail))
+						ftp_file_json = open( '%s%s/%s' % (encoded, vhash, encode_file_thumbnail),'rb')
+						ftp.storbinary('STOR ' + encode_file_thumbnail, ftp_file_json)
+						logthis('Uploaded  %s/%s/%s/%s/%s' % (year, month, day, vhash, encode_file_thumbnail))
+					except :
+						pass
 					# Close FTP 
 					ftp_file.close()
 					# Update status
@@ -204,24 +211,48 @@ else:
 				if not os.path.exists('%s/%s/%s' % (local_folder, ftp_path, vhash)):
 					os.makedirs('%s/%s/%s' % (local_folder, ftp_path, vhash))
 				# Upload video
-				logthis('Uploading  %s/%s/%s/%s/%s' % (year, month, day, vhash, encode_file))
-				shutil.copy('%s%s/%s' % (encoded, vhash, encode_file), '%s/%s/%s/%s' % (local_folder, ftp_path, vhash, encode_file))
-				os.chmod('%s/%s/%s/%s' % (local_folder, ftp_path, vhash, encode_file), 0644)
-				logthis('Uploaded  %s/%s/%s/%s/%s' % (year, month, day, vhash, encode_file))
+				try :
+					logthis('Uploading  %s/%s/%s/%s/%s' % (year, month, day, vhash, encode_file))
+					# Copy file using .part and then rename for atomic change
+					# Thxs AleD!
+					shutil.copy('%s%s/%s' % (encoded, vhash, encode_file), '%s/%s/%s/%s.part' % (local_folder, ftp_path, vhash, encode_file))
+					shutil.move('%s/%s/%s/%s.part' % (local_folder, ftp_path, vhash, encode_file), '%s/%s/%s/%s' % (local_folder, ftp_path, vhash, encode_file))
+					# Change permissions
+					os.chmod('%s/%s/%s/%s' % (local_folder, ftp_path, vhash, encode_file), 0644)
+					logthis('Uploaded  %s/%s/%s/%s/%s' % (year, month, day, vhash, encode_file))
+				except :
+					pass
 				# Upload FFMPEG log
-				encode_file_name, encode_file_ext = os.path.splitext(encode_file)
-				encode_file_log = "%s.log" % encode_file_name	
-				logthis('Uploading  %s/%s/%s/%s/%s' % (year, month, day, vhash, encode_file_log))
-				shutil.copy('%s/%s/%s' % (encoded, vhash, encode_file_log), '%s/%s/%s/%s' % (local_folder, ftp_path, vhash, encode_file_log))
-				os.chmod('%s/%s/%s/%s' % (local_folder, ftp_path, vhash, encode_file_log), 0644)
-				logthis('Uploaded  %s/%s/%s/%s/%s' % (year, month, day, vhash, encode_file_log))			
+				try :
+					encode_file_name, encode_file_ext = os.path.splitext(encode_file)
+					encode_file_log = "%s.log" % encode_file_name	
+					logthis('Uploading  %s/%s/%s/%s/%s' % (year, month, day, vhash, encode_file_log))
+					shutil.copy('%s/%s/%s' % (encoded, vhash, encode_file_log), '%s/%s/%s/%s.part' % (local_folder, ftp_path, vhash, encode_file_log))
+					shutil.move('%s/%s/%s/%s.part' % (local_folder, ftp_path, vhash, encode_file_log), '%s/%s/%s/%s' % (local_folder, ftp_path, vhash, encode_file_log))
+					os.chmod('%s/%s/%s/%s' % (local_folder, ftp_path, vhash, encode_file_log), 0644)
+					logthis('Uploaded  %s/%s/%s/%s/%s' % (year, month, day, vhash, encode_file_log))
+				except :
+					pass
 				# Upload JSON
 				try :
 					encode_file_json = "%s.json" % vhash
 					logthis('Uploading  %s/%s/%s/%s/%s' % (year, month, day, vhash, encode_file_json))
-					shutil.copy('%s/%s/%s' % (encoded, vhash, encode_file_json), '%s/%s/%s/%s' % (local_folder, ftp_path, vhash, encode_file_json))
+					shutil.copy('%s/%s/%s' % (encoded, vhash, encode_file_json), '%s/%s/%s/%s.part' % (local_folder, ftp_path, vhash, encode_file_json))
+					shutil.move('%s/%s/%s/%s.part' % (local_folder, ftp_path, vhash, encode_file_json), '%s/%s/%s/%s' % (local_folder, ftp_path, vhash, encode_file_json))
 					os.chmod('%s/%s/%s/%s' % (local_folder, ftp_path, vhash, encode_file_json), 0644)
 					logthis('Uploaded  %s/%s/%s/%s/%s' % (year, month, day, vhash, encode_file_json))
+				except :
+					pass
+				# Upload thumbnail
+				try :
+					encode_file_thumbnail = "%s.jpg" % vhash
+					# Check if thumbnail has been already uploaded
+					if not os.path.isfile('%s/%s/%s/%s' % (local_folder, ftp_path, vhash, encode_file_thumbnail)) :	
+						logthis('Uploading  %s/%s/%s/%s/%s' % (year, month, day, vhash, encode_file_thumbnail))
+						shutil.copy('%s/%s/%s' % (encoded, vhash, encode_file_thumbnail), '%s/%s/%s/%s.part' % (local_folder, ftp_path, vhash, encode_file_thumbnail))
+						shutil.move('%s/%s/%s/%s.part' % (local_folder, ftp_path, vhash, encode_file_thumbnail), '%s/%s/%s/%s' % (local_folder, ftp_path, vhash, encode_file_thumbnail))
+						os.chmod('%s/%s/%s/%s' % (local_folder, ftp_path, vhash, encode_file_thumbnail), 0644)
+						logthis('Uploaded  %s/%s/%s/%s/%s' % (year, month, day, vhash, encode_file_thumbnail))
 				except :
 					pass
 				# Update status
