@@ -196,7 +196,7 @@ Many sites can be configured in the same fashion. We will extend this README.
 	* * * * * python /var/www/html/ufe/ufe-recycle.py -r nonvideos >/var/tmp/ufe-recycle_nonvideos.log 2>&1
 	
 -------------------------------------------------------------------------------
-	ALTERNATIVE IDEAS
+	ALTERNATIVE IDEAS:
 	* You could use inotify to monitor last access of files with INCRON 
 	  ( http://inotify.aiken.cz/ )
 	* You could use DAEMON TOOLS ( http://cr.yp.to/daemontools.html )
