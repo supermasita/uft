@@ -1,8 +1,8 @@
--- MySQL dump 10.11
+-- MySQL dump 10.13  Distrib 5.1.73, for redhat-linux-gnu (x86_64)
 --
 -- Host: localhost    Database: ufe
 -- ------------------------------------------------------
--- Server version	5.0.77
+-- Server version	5.1.73
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -16,27 +16,37 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Current Database: `ufe`
+--
+
+/*!40000 DROP DATABASE IF EXISTS `ufe`*/;
+
+CREATE DATABASE /*!32312 IF NOT EXISTS*/ `ufe` /*!40100 DEFAULT CHARACTER SET latin1 */;
+
+USE `ufe`;
+
+--
 -- Table structure for table `servers`
 --
 
 DROP TABLE IF EXISTS `servers`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `servers` (
   `servers_id` int(11) NOT NULL,
-  `name` varchar(45) NOT NULL default '',
+  `name` varchar(45) NOT NULL DEFAULT '',
   `role` varchar(45) NOT NULL,
-  `enabled` int(1) NOT NULL default '0',
-  `ip` varchar(45) default NULL,
-  `handicap` int(2) NOT NULL default '1',
-  `load` float default '0',
-  `running_ps` int(11) default '0',
-  `max_ps` int(11) NOT NULL default '2',
-  PRIMARY KEY  (`servers_id`),
+  `enabled` int(1) NOT NULL DEFAULT '0',
+  `ip` varchar(45) DEFAULT NULL,
+  `handicap` int(2) NOT NULL DEFAULT '1',
+  `load` float DEFAULT '0',
+  `running_ps` int(11) DEFAULT '0',
+  `max_ps` int(11) NOT NULL DEFAULT '2',
+  PRIMARY KEY (`servers_id`),
   UNIQUE KEY `name_UNIQUE` (`name`),
   UNIQUE KEY `servers_id_UNIQUE` (`servers_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `servers`
@@ -53,26 +63,26 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `sites`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `sites` (
   `id` int(2) NOT NULL,
   `name` varchar(45) NOT NULL,
-  `enabled` int(1) NOT NULL default '0',
-  `site_url` varchar(45) default NULL,
+  `enabled` int(1) NOT NULL DEFAULT '0',
+  `site_url` varchar(45) DEFAULT NULL,
   `local_folder` varchar(45) NOT NULL,
-  `ftp_enabled` varchar(45) NOT NULL default '0',
-  `ftp_user` varchar(45) default NULL,
-  `ftp_pass` varchar(45) default NULL,
-  `ftp_host` varchar(45) default NULL,
+  `ftp_enabled` varchar(45) NOT NULL DEFAULT '0',
+  `ftp_user` varchar(45) DEFAULT NULL,
+  `ftp_pass` varchar(45) DEFAULT NULL,
+  `ftp_host` varchar(45) DEFAULT NULL,
   `vp_default` int(2) NOT NULL,
-  `vp_enabled` varchar(45) default NULL,
-  `vp_priority` int(2) default NULL,
-  PRIMARY KEY  (`id`,`name`),
+  `vp_enabled` varchar(45) DEFAULT NULL,
+  `vp_priority` int(2) DEFAULT NULL,
+  PRIMARY KEY (`id`,`name`),
   UNIQUE KEY `name_UNIQUE` (`name`),
   UNIQUE KEY `id_UNIQUE` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `sites`
@@ -89,32 +99,32 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `video_encoded`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `video_encoded` (
   `vhash` varchar(64) NOT NULL,
-  `t_created` timestamp NULL default '0000-00-00 00:00:00',
+  `t_created` timestamp NULL DEFAULT '0000-00-00 00:00:00',
   `site_id` int(2) NOT NULL,
   `server_name` varchar(45) NOT NULL,
-  `vpid` int(11) NOT NULL default '1',
-  `priority` int(2) NOT NULL default '10',
-  `weight` int(11) NOT NULL default '0',
-  `encode_status` int(1) NOT NULL default '1',
-  `ftp_status` int(1) NOT NULL default '1',
-  `recycle_status` int(1) NOT NULL default '1',
-  `encode_time` timestamp NULL default '0000-00-00 00:00:00',
+  `vpid` int(11) NOT NULL DEFAULT '1',
+  `priority` int(2) NOT NULL DEFAULT '10',
+  `weight` int(11) NOT NULL DEFAULT '0',
+  `encode_status` int(1) NOT NULL DEFAULT '1',
+  `ftp_status` int(1) NOT NULL DEFAULT '1',
+  `recycle_status` int(1) NOT NULL DEFAULT '1',
+  `encode_time` timestamp NULL DEFAULT '0000-00-00 00:00:00',
   `encode_file` varchar(120) NOT NULL,
-  `ftp_time` timestamp NULL default '0000-00-00 00:00:00',
-  `ftp_path` varchar(120) NOT NULL default '',
-  `recycle_time` timestamp NULL default '0000-00-00 00:00:00',
-  `encode_percent` float default NULL,
-  PRIMARY KEY  (`vhash`,`vpid`),
+  `ftp_time` timestamp NULL DEFAULT '0000-00-00 00:00:00',
+  `ftp_path` varchar(120) NOT NULL DEFAULT '',
+  `recycle_time` timestamp NULL DEFAULT '0000-00-00 00:00:00',
+  `encode_percent` float DEFAULT NULL,
+  PRIMARY KEY (`vhash`,`vpid`),
   KEY `idx_status` (`encode_status`),
   KEY `idx_vhash` (`vhash`),
   KEY `idx_site_id` (`site_id`),
   KEY `idx_server_name` (`server_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `video_encoded`
@@ -130,39 +140,39 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `video_original`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `video_original` (
   `vhash` varchar(64) NOT NULL,
-  `t_created` timestamp NULL default '0000-00-00 00:00:00',
-  `site_id` int(2) default NULL,
-  `server_name` varchar(45) default NULL,
-  `filename_orig` varchar(120) NOT NULL default '',
-  `filename_san` varchar(120) default NULL,
-  `vp_total` int(2) NOT NULL default '0',
-  `vp_done` int(2) NOT NULL default '0',
-  `vp_run` int(2) NOT NULL default '0',
-  `vp_error` int(2) NOT NULL default '0',
-  `recycle_status` int(1) NOT NULL default '1',
-  `status_time` timestamp NULL default '0000-00-00 00:00:00',
-  `recycle_time` timestamp NULL default '0000-00-00 00:00:00',
-  `file_format` varchar(45) default NULL,
-  `video_br` int(11) default NULL,
-  `video_w` int(11) default NULL,
-  `video_h` int(11) default NULL,
-  `aspect_r` float default NULL,
-  `duration` int(11) default NULL,
-  `size` bigint(20) default NULL,
-  `total_br` int(11) default NULL,
-  `audio_br` int(11) default NULL,
-  `video_f` varchar(45) default NULL,
-  `audio_f` varchar(45) default NULL,
+  `t_created` timestamp NULL DEFAULT '0000-00-00 00:00:00',
+  `site_id` int(2) DEFAULT NULL,
+  `server_name` varchar(45) DEFAULT NULL,
+  `filename_orig` varchar(120) NOT NULL DEFAULT '',
+  `filename_san` varchar(120) DEFAULT NULL,
+  `vp_total` int(2) NOT NULL DEFAULT '0',
+  `vp_done` int(2) NOT NULL DEFAULT '0',
+  `vp_run` int(2) NOT NULL DEFAULT '0',
+  `vp_error` int(2) NOT NULL DEFAULT '0',
+  `recycle_status` int(1) NOT NULL DEFAULT '1',
+  `status_time` timestamp NULL DEFAULT '0000-00-00 00:00:00',
+  `recycle_time` timestamp NULL DEFAULT '0000-00-00 00:00:00',
+  `file_format` varchar(45) DEFAULT NULL,
+  `video_br` int(11) DEFAULT NULL,
+  `video_w` int(11) DEFAULT NULL,
+  `video_h` int(11) DEFAULT NULL,
+  `aspect_r` float DEFAULT NULL,
+  `duration` int(11) DEFAULT NULL,
+  `size` bigint(20) DEFAULT NULL,
+  `total_br` int(11) DEFAULT NULL,
+  `audio_br` int(11) DEFAULT NULL,
+  `video_f` varchar(45) DEFAULT NULL,
+  `audio_f` varchar(45) DEFAULT NULL,
   `thumbnail_blob` blob,
-  PRIMARY KEY  (`vhash`),
+  PRIMARY KEY (`vhash`),
   UNIQUE KEY `vhash_UNIQUE` (`vhash`),
   KEY `idx_vhash` (`vhash`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `video_original`
@@ -178,13 +188,13 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `video_profile`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `video_profile` (
   `vpid` int(11) NOT NULL,
   `profile_name` varchar(45) NOT NULL,
-  `enabled` int(1) NOT NULL default '0',
-  `file_format` varchar(45) NOT NULL default 'MPEG-4',
+  `enabled` int(1) NOT NULL DEFAULT '0',
+  `file_format` varchar(45) NOT NULL DEFAULT 'MPEG-4',
   `video_f` varchar(45) NOT NULL,
   `video_br` int(11) NOT NULL,
   `video_h` int(11) NOT NULL,
@@ -193,11 +203,11 @@ CREATE TABLE `video_profile` (
   `min_video_br` int(11) NOT NULL,
   `min_video_w` int(11) NOT NULL,
   `param_ffmpeg` varchar(1024) NOT NULL,
-  PRIMARY KEY  (`vpid`),
+  PRIMARY KEY (`vpid`),
   UNIQUE KEY `vpid_UNIQUE` (`vpid`),
   UNIQUE KEY `profile_name_UNIQUE` (`profile_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `video_profile`
@@ -218,4 +228,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2012-06-06  5:41:31
+-- Dump completed on 2015-07-24 19:17:26
