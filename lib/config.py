@@ -6,11 +6,11 @@
 # 
 
 # Core root
-core_root = "/var/www/html/ufe/"
+core_root = "/opt/ufe/"
 # Absolute path to folder where original videos are copied
-original = "/var/www/html/ufe/video_original/"
+original = "/opt/ufe/video_original/"
 # Absolute path to folder where encoded videos are created
-encoded = "/var/www/html/ufe/video_encoded/"
+encoded = "/opt/ufe/video_encoded/"
 # Absolute path to temporal folder (no trailing slash)
 tmppath = "/var/tmp"
 
