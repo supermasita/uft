@@ -1,12 +1,10 @@
-#-----------------------------------------------------------------------------#
-|                             UNATTENDED FFMPEG ENCODER                       |
-|	        	https://github.com/supermasita/ufe             	      |
-#-----------------------------------------------------------------------------#
+# UNATTENDED FFMPEG ENCODER                     
+### https://github.com/supermasita/ufe             	     
 
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
- (!) WORD OF WARNING: This proyect is in a development stage and not even the 
- README is complete. Use it at your own risk; don't blame us if you cause WW3
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+WORD OF WARNING: 
+This proyect is in a development stage and not even the README is complete. 
+(!) USE IT AT YOUR OWN RISK (!)
+
 
 1. INTRODUCTION
 1.1 What is UFE ?
