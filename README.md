@@ -1,42 +1,17 @@
+
+THIS README IS BEING CREATED
+
 # UNATTENDED FFMPEG TRANSCODER                     
-### https://github.com/supermasita/uft             	     
+https://github.com/supermasita/uft             	     
 
 WORD OF WARNING: 
 This proyect is in a development stage and not even the README is complete. 
 (!) USE IT AT YOUR OWN RISK (!)
 
-
-1. INTRODUCTION
-1.1 What is UFT ?
-1.2 What is not UFT ?
-1.3 Features
-1.4 To-do
-1.5 Credits
-
-2. INSTALLING
-2.1 Dependencies
-2.2 Creating directories
-2.3 Creating database
-2.4 Creating FTP
-2.5 Configuration
-2.6 Installing crons
-
-3. USING UFT
-3.1 Encoding workflow
-3.1.1 Checker
-3.1.2 Encoder
-3.1.3 Uploader
-
-4. GETTING HELP
-4.1 Troubleshooting  DO THIS!
-4.2 Known issues
-
--------------------------------------------------------------------------------
-
-1. INTRODUCTION
+### INTRODUCTION
 
 
-1.1 What is UFT?
+####  What is UFT?
 
 	UFT started as a bunch scripts used to encode and upload video in a 
 completely unattended way. The goal is to make the encoding and uploading easy 
@@ -49,14 +24,14 @@ and upload them; UFT will make things easier.
 
 	You can use UFT as a centralize solution for encoding videos, leaving
 the encoding profiles to the Admin and not to the users, disabling them from
-FTP access and not hogging their computers with CPU intensive tasks.
+FTP access and not .cron.outging their computers with CPU intensive tasks.
 
 	UFT could be thought as a simple alternative to other encoding software 
 such as: Handbrake, Sorenson Squeeze, Windows Movie Maker, etc. 
 
 
 
-1.2 What is not UFT?
+####  What is not UFT?
 
 	UFT is not a fully featured video edition and encoding software. We 
 focus on simple and reliable operation. 
@@ -65,7 +40,7 @@ focus on simple and reliable operation.
 will always be as simple as possible.
 
 
-1.3 Features
+#### Features
 	
 	* Multisite in mind. 
 	* Video presets: you can create your own, enable/disable them (globally 
@@ -78,27 +53,12 @@ will always be as simple as possible.
 	  (default: 2).
 	* Non-blocking weighted queues won't let a huge video consume all your 
 	  processes and leave all other waiting.
-	* Logging in syslog.
-	* Per video FFMPEG log.
+	* Logging in sys.cron.out.
+	* Per video FFMPEG .cron.out.
 	* Video hinting.
 
-1.4 To-do
-	
-	* Create video thumbnail and store it as a blob.
-	* Handle exceptions.
-	* Create install script.
-	* "Pythonize" scripts.
-	* Create python daemon and avoid crons.
-	* Monitor file last access with inotify.
-	* Improve logging.
 
-1.5 Credits
-
-	* Alejandro Ferrari
-	  Sysadmin and Wowza expert 
-
-	* Supermasita
-	  Python coder wannabe and part time human being
+#### Additional credits
 
         * "Pymediainfo"
 	  Wrapper for Mediainfo CLI 
@@ -108,14 +68,14 @@ will always be as simple as possible.
 	  Used to hint videos
 	  https://github.com/danielgtaylor/qtfaststart
 
--------------------------------------------------------------------------------
 
-2. INSTALLING
+### INSTALLING
 
-(!) Don't hesitate to search for our help at Github if you have any trouble or
-doubt about installation.
+#### Use Docker!
 
-2.1 Dependencies
+Try quickly by building an image with the included Dockerfile
+
+#### Dependencies
 
 	* "MySQL-python" http://sourceforge.net/projects/mysql-python/ 
 	* "python-simplejson" http://pypi.python.org/pypi/simplejson/ 
@@ -123,17 +83,7 @@ doubt about installation.
 	   (if using RHEL best install it from http://atrpms.net/)
 	* "Medianfo CLI" http://mediainfo.sourceforge.net/
 
-
-2.2 Creating directories
-	
-	1- Create a directory for the scripts (ex: /var/www/html/uft/), where you will
-	do the "git clone" or untar.
-	2- Inside this directory create the following ones :
-		* "video_original" : where UFT temporaly moves original videos.
-		* "video_encoded" : where UFT temporaly stores encoded videos.
-
-
-2.3 Creating database
+#### Creating database
 	
 	1- Create a database called "uft" (or whatever you like).
 	2- Create a user ("uft") and grants to use the database.
@@ -145,14 +95,7 @@ doubt about installation.
 	(!) USE THE DB, USER AND PASS THAT YOU CREATED IN STEP 1 AND 2
 
 
-2.4 Creating FTP 
-	
-	You will need at least one FTP account to upload your videos. Installing
-and configuring an FTP server exceeds the reach of this document, please refer
-to any online sources (http://www.cyberciti.biz/ offers great guide). 
-
-
-2.5 Configuration
+#### Configuration
 	
 (!) This is the basic configuration to get you running with the "default" site.
 Many sites can be configured in the same fashion. We will extend this README.
@@ -182,27 +125,27 @@ Many sites can be configured in the same fashion. We will extend this README.
 	needs and setup):
 
 	# UFT : MAIN
-	* * * * * python /var/www/html/uft/uft-add.py -a dir -s default -f /var/tmp/videos/ > /var/tmp/uft-add.log 2>&1
-	* * * * * python /var/www/html/uft/uft-encode.py > /var/tmp/uft-encode.log 2>&1
-	* * * * * python /var/www/html/uft/uft-upload.py > /var/tmp/uft-upload.log 2>&1
-	# (next line only if u want estimate encode progress on DB)
-	* * * * * python /var/www/html/uft/uft-progress.py > /var/tmp/uft-progress.log 2>&1
+	* * * * * python /opt/uft/uft-add.py -a dir -s default -f /opt/uft/video-files/watchfolder/ > /var/tmp/uft-add.cron.out 2>&1
+	* * * * * python /opt/uft/uft-encode.py > /var/tmp/uft-encode.cron.out 2>&1
+	* * * * * python /opt/uft/uft-upload.py > /var/tmp/uft-upload.cron.out 2>&1
+	# (next line only if u want estimate encode p.cron.outress on DB)
+	* * * * * python /opt/uft/uft-progress.py > /var/tmp/uft-progress.cron.out 2>&1
 	# UFT : RECYCLING
-	* * * * * python /var/www/html/uft/uft-recycle.py -r encoded > /var/tmp/uft-recycle_encoded.log 2>&1
-	* * * * * python /var/www/html/uft/uft-recycle.py -r original > /var/tmp/uft-recycle_original.log 2>&1
-	* * * * * python /var/www/html/uft/uft-recycle.py -r registers >/var/tmp/uft-recycle_registers.log 2>&1
-	* * * * * python /var/www/html/uft/uft-recycle.py -r nonvideos >/var/tmp/uft-recycle_nonvideos.log 2>&1
+	* * * * * python /opt/uft/uft-recycle.py -r encoded > /var/tmp/uft-recycle_encoded.cron.out 2>&1
+	* * * * * python /opt/uft/uft-recycle.py -r original > /var/tmp/uft-recycle_original.cron.out 2>&1
+	* * * * * python /opt/uft/uft-recycle.py -r registers >/var/tmp/uft-recycle_registers.cron.out 2>&1
+	* * * * * python /opt/uft/uft-recycle.py -r nonvideos >/var/tmp/uft-recycle_nonvideos.cron.out 2>&1
 	
--------------------------------------------------------------------------------
+"""
 	ALTERNATIVE IDEAS:
 	* You could use inotify to monitor last access of files with INCRON 
 	  ( http://inotify.aiken.cz/ )
 	* You could use DAEMON TOOLS ( http://cr.yp.to/daemontools.html )
--------------------------------------------------------------------------------
+"""
 
-3. USING UFT
+### USING UFT
 
-3.1 Encoding workflow
+#### Encoding workflow
 	
 	* "uft-checker" will scan the directory and if it finds that the file
 	has not been modified in a given time period (defined in "config.py") 
@@ -235,25 +178,3 @@ Many sites can be configured in the same fashion. We will extend this README.
 		* registers for those videos whose encoded and original videos have 
 		  been recycled.
 
-3.1.1 Checker (to do)
-
-3.1.2 Encoder (to do)
-
-3.1.3 Uploader (to do)
-
-3.1.4 States (to do)
-	
-	0 : disabled
-	1 : pending
-	2 : running
-	3 : finished
-	4 : error
-
--------------------------------------------------------------------------------
-
-4. GETTING HELP
-
-(!) To be done! Please contact us at Github!
-
-4.1 Troubleshooting
-4.2 Known issues
