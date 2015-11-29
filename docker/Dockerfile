@@ -45,7 +45,7 @@ RUN pip install simple-json pymediainfo qtfaststart youtube-dl
 
 RUN cd /opt && git clone https://github.com/supermasita/uft.git
 
-#RUN /etc/init.d/mysqld start && mysql -e "CREATE DATABASE uft; CREATE USER 'uft'@'%' IDENTIFIED BY 'uft'; GRANT ALL PRIVILEGES ON uft.* TO 'uft'@'%'; FLUSH PRIVILEGES;" && mysql -D uft < $UFTHOME/uft/lib/database_structure.sql
+#RUN /etc/init.d/mysqld start && mysql -e "CREATE DATABASE uft; CREATE USER 'uft'@'%' IDENTIFIED BY 'uft'; GRANT ALL PRIVILEGES ON uft.* TO 'uft'@'%' WITH GRANT OPTION; FLUSH PRIVILEGES;" && mysql -D uft < $UFTHOME/uft/lib/database_structure.sql
 RUN /etc/init.d/mysqld start && mysql -D uft < $UFTHOME/uft/lib/database_structure.sql
 
 
