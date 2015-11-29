@@ -1,8 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
-# UNATTENDED FFMPEG ENCODER
-# https://github.com/supermasita/ufe  
+# UNATTENDED FFMPEG TRANSCODER
+# https://github.com/supermasita/uft  
 # 
 
 import re

@@ -1,8 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
-# UNATTENDED FFMPEG ENCODER
-# https://github.com/supermasita/ufe
+# UNATTENDED FFMPEG TRANSCODER
+# https://github.com/supermasita/uft
 # 
 
 from config import *
@@ -151,7 +151,7 @@ def encode_video_ffmpeg(e_vhash, e_vpid, e_filename_san, e_encode_file, e_param)
 
 
 def create_video_json_file(vhash) :
-	"""Creates JSON file with status_check() from ufe-control. Usefull to create adaptative
+	"""Creates JSON file with status_check() from uft-control. Usefull to create adaptative
 	   video playlists.
 	"""
 	# Check existance of dir

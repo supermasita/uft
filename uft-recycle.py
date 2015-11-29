@@ -1,8 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
-# UNATTENDED FFMPEG ENCODER
-# https://github.com/supermasita/ufe  
+# UNATTENDED FFMPEG TRANSCODER
+# https://github.com/supermasita/uft  
 # 
 
 from lib.recycle import *
@@ -13,16 +13,16 @@ import getopt
 ##
 ###
 
-def ufe_recycle_usage():
-        """Prints the usage of "ufe-recycle".
+def uft_recycle_usage():
+        """Prints the usage of "uft-recycle".
         """
         print """
         Usage example : 
         
-        ufe-recycle.py -r encoded
-        ufe-recycle.py -r original
-        ufe-recycle.py -r registers
-        ufe-recycle.py -r nonvideos
+        uft-recycle.py -r encoded
+        uft-recycle.py -r original
+        uft-recycle.py -r registers
+        uft-recycle.py -r nonvideos
 
         """
 #
@@ -36,7 +36,7 @@ argv = sys.argv[1:]
 try :
         opts, args = getopt.getopt(argv, "r:")
 except :
-        ufe_recycle_usage()
+        uft_recycle_usage()
         sys.exit(2)
 
 # Assign parameters as variables
@@ -94,10 +94,10 @@ if vars().has_key('recycle_this') :
 	#
 	else :
 	        print "\nWrong parameters..."
-	        ufe_recycle_usage()
+	        uft_recycle_usage()
         	sys.exit(2)
 
 else :
 	print "\nWrong parameters..."
-	ufe_recycle_usage()
+	uft_recycle_usage()
 	sys.exit(2)

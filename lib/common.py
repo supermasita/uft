@@ -1,8 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
-# UNATTENDED FFMPEG ENCODER
-# https://github.com/supermasita/ufe
+# UNATTENDED FFMPEG TRANSCODER
+# https://github.com/supermasita/uft
 # 
 
 
@@ -21,7 +21,7 @@ import syslog
 def logthis(message, stdout=1) :
         """Writes message to SYSLOG and prints it to STDOUT, if u want.
         """
-        syslog.syslog(syslog.LOG_INFO, 'UFE | %s' % message )
+        syslog.syslog(syslog.LOG_INFO, 'UFT | %s' % message )
         if stdout==1 :
 		print "%s" % message
 	
@@ -79,10 +79,10 @@ def spawn_process(process) :
 	"""Spawns a process like encode.py or ftp.py. It does not wait for the spawned process to finish.
 	"""
 	if process=="encode":
-		pid = subprocess.Popen(["%s/ufe-encode.py" % core_root]).pid		
+		pid = subprocess.Popen(["%s/uft-encode.py" % core_root]).pid		
 		logthis('Spawned %s with PID %i' % (process, pid))
 	elif process=="upload":
-		pid = subprocess.Popen(["%s/ufe-upload.py" % core_root]).pid
+		pid = subprocess.Popen(["%s/uft-upload.py" % core_root]).pid
 		logthis('Spawned %s with PID %i' % (process, pid))
 	else:
 		logthis('No process named %s !' % process)

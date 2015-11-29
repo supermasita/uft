@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 5.1.73, for redhat-linux-gnu (x86_64)
 --
--- Host: localhost    Database: ufe
+-- Host: localhost    Database: uft
 -- ------------------------------------------------------
 -- Server version	5.1.73
 
@@ -14,16 +14,6 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-
---
--- Current Database: `ufe`
---
-
-/*!40000 DROP DATABASE IF EXISTS `ufe`*/;
-
-CREATE DATABASE /*!32312 IF NOT EXISTS*/ `ufe` /*!40100 DEFAULT CHARACTER SET latin1 */;
-
-USE `ufe`;
 
 --
 -- Table structure for table `servers`
@@ -54,7 +44,7 @@ CREATE TABLE `servers` (
 
 LOCK TABLES `servers` WRITE;
 /*!40000 ALTER TABLE `servers` DISABLE KEYS */;
-INSERT INTO `servers` VALUES (1,'encoder01','encoder',1,'127.0.0.1',1,0,0,2);
+INSERT INTO `servers` VALUES (1,'TRX01','encoder',1,'127.0.0.1',1,0,0,2);
 /*!40000 ALTER TABLE `servers` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -90,7 +80,7 @@ CREATE TABLE `sites` (
 
 LOCK TABLES `sites` WRITE;
 /*!40000 ALTER TABLE `sites` DISABLE KEYS */;
-INSERT INTO `sites` VALUES (1,'default',1,'','/var/tmp/ufe-uploaded','0','ufe','ufepassword','127.0.0.1',0,NULL,3);
+INSERT INTO `sites` VALUES (1,'default',1,'','/var/tmp/uft-uploaded','0','uft','uftpassword','127.0.0.1',0,NULL,3);
 /*!40000 ALTER TABLE `sites` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -215,7 +205,7 @@ CREATE TABLE `video_profile` (
 
 LOCK TABLES `video_profile` WRITE;
 /*!40000 ALTER TABLE `video_profile` DISABLE KEYS */;
-INSERT INTO `video_profile` VALUES (1,'720pw',1,'MPEG-4','AVC',1500000,720,1280,1.77,1500000,1280,'-async 1 -b 1500k -vf scale=1280:trunc(ow/a/2)*2 -vcodec libx264 -flags +loop -me_method hex -g 60 -qcomp 0.6 -qmin 10 -qmax 51 -qdiff 4 -bf 3 -b_strategy 1 -i_qfactor 0.71 -cmp +chroma -subq 8 -me_range 16 -coder 1 -sc_threshold 40 -flags2 +bpyramid+wpred+mixed_refs-dct8x8+fastpskip -keyint_min 25 -refs 3 -trellis 1 -level 31 -directpred 1 -partitions -parti8x8-parti4x4-partp8x8-partp4x4-partb8x8 -threads 0 -acodec aac -strict experimental -ar 44100 -ab 128k -deinterlace -metadata comment=Encoded_by_UFE -y'),(2,'480pw',0,'MPEG-4','AVC',800000,480,854,1.77,800000,854,'-async 1 -b 800k -vf scale=854:trunc(ow/a/2)*2 -vcodec libx264 -flags +loop -me_method hex -g 60 -qcomp 0.6 -qmin 10 -qmax 51 -qdiff 4 -bf 3 -b_strategy 1 -i_qfactor 0.71 -cmp +chroma -subq 8 -me_range 16 -coder 1 -sc_threshold 40 -flags2 +bpyramid+wpred+mixed_refs-dct8x8+fastpskip -keyint_min 25 -refs 3 -trellis 1 -level 31 -directpred 1 -partitions -parti8x8-parti4x4-partp8x8-partp4x4-partb8x8 -threads 0 -acodec aac -strict experimental -ar 44100 -ab 128k -deinterlace -metadata comment=Encoded_by_UFE -y'),(3,'360pw',1,'MPEG-4','AVC',500000,360,640,1.77,500000,640,'-async 1 -b 500k -vf scale=640:trunc(ow/a/2)*2 -vcodec libx264 -flags +loop -me_method hex -g 60 -qcomp 0.6 -qmin 10 -qmax 51 -qdiff 4 -bf 0 -b_strategy 1 -i_qfactor 0.71 -cmp +chroma -subq 8 -me_range 16 -coder 0 -sc_threshold 40 -flags2 +bpyramid-wpred+mixed_refs-dct8x8+fastpskip -wpredp 0 -keyint_min 25 -refs 3 -trellis 1 -level 30 -directpred 1 -partitions -parti8x8-parti4x4-partp8x8-partp4x4-partb8x8 -threads 0 -acodec aac -strict experimental -ar 44100 -ab 96k -deinterlace -metadata comment=Encoded_by_UFE -y'),(4,'240pw',1,'MPEG-4','AVC',250000,240,400,1.77,0,0,'-async 1 -r 15 -b 250k -vf scale=400:trunc(ow/a/2)*2 -vcodec libx264 -flags +loop -me_method hex -g 60 -qcomp 0.6 -qmin 10 -qmax 51 -qdiff 4 -bf 0 -b_strategy 1 -i_qfactor 0.71 -cmp +chroma -subq 8 -me_range 16 -coder 0 -sc_threshold 40 -flags2 +bpyramid-wpred+mixed_refs-dct8x8+fastpskip -wpredp 0 -keyint_min 25 -refs 3 -trellis 1 -level 30 -directpred 1 -partitions -parti8x8-parti4x4-partp8x8-partp4x4-partb8x8 -threads 0 -acodec aac -strict experimental -ar 22050 -ab 32k -deinterlace -metadata comment=Encoded_by_UFE -y'),(5,'480p',1,'MPEG-4','AVC',800000,480,640,1.33,800000,640,'-async 1 -b 800k -vf scale=640:trunc(ow/a/2)*2 -vcodec libx264 -flags +loop -me_method hex -g 60 -qcomp 0.6 -qmin 10 -qmax 51 -qdiff 4 -bf 3 -b_strategy 1 -i_qfactor 0.71 -cmp +chroma -subq 8 -me_range 16 -coder 1 -sc_threshold 40 -flags2 +bpyramid+wpred+mixed_refs-dct8x8+fastpskip -keyint_min 25 -refs 3 -trellis 1 -level 31 -directpred 1 -partitions -parti8x8-parti4x4-partp8x8-partp4x4-partb8x8 -threads 0 -acodec aac -strict experimental -ar 44100 -ab 128k -deinterlace -metadata comment=Encoded_by_UFE -y'),(6,'360p',1,'MPEG-4','AVC',500000,360,480,1.33,500000,480,'-async 1 -b 500k -vf scale=480:trunc(ow/a/2)*2 -vcodec libx264 -flags +loop -me_method hex -g 60 -qcomp 0.6 -qmin 10 -qmax 51 -qdiff 4 -bf 0 -b_strategy 1 -i_qfactor 0.71 -cmp +chroma -subq 8 -me_range 16 -coder 0 -sc_threshold 40 -flags2 +bpyramid-wpred+mixed_refs-dct8x8+fastpskip -wpredp 0 -keyint_min 25 -refs 3 -trellis 1 -level 30 -directpred 1 -partitions -parti8x8-parti4x4-partp8x8-partp4x4-partb8x8 -threads 0 -acodec aac -strict experimental -ar 44100 -ab 96k -deinterlace -metadata comment=Encoded_by_UFE -y'),(7,'240p',1,'MPEG-4','AVC',250000,240,320,1.33,0,0,'-async 1 -r 15 -b 250k -vf scale=320:trunc(ow/a/2)*2 -vcodec libx264 -flags +loop -me_method hex -g 60 -qcomp 0.6 -qmin 10 -qmax 51 -qdiff 4 -bf 0 -b_strategy 1 -i_qfactor 0.71 -cmp +chroma -subq 8 -me_range 16 -coder 0 -sc_threshold 40 -flags2 +bpyramid-wpred+mixed_refs-dct8x8+fastpskip -wpredp 0 -keyint_min 25 -refs 3 -trellis 1 -level 30 -directpred 1 -partitions -parti8x8-parti4x4-partp8x8-partp4x4-partb8x8 -threads 0 -acodec aac -strict experimental -ar 22050 -ab 32k -deinterlace -metadata comment=Encoded_by_UFE -y');
+INSERT INTO `video_profile` VALUES (1,'720p',1,'MPEG-4','AVC',2500000,720,1280,1.77,2500000,1280,'-async 1 -c:v libx264 -b:v 2500k -profile:v high -level 4.0 -vf scale=\"1280:trunc(ow/a/2)*2\" -y'),(2,'480p',1,'MPEG-4','AVC',1500000,480,854,1.77,1500000,854,'-async 1 -c:v libx264 -b:v 1500k -profile:v main -level 3.1 -vf scale=\"853:trunc(ow/a/2)*2\" -y'),(3,'360p',1,'MPEG-4','AVC',900000,360,640,1.77,900000,640,'-async 1 -c:v libx264 -b:v 900k -profile:v baseline -level 3.0 -vf scale=\"640:trunc(ow/a/2)*2\" -y '),(4,'240p',1,'MPEG-4','AVC',400000,240,426,1.77,0,0,'-async 1 -c:v libx264 -b:v 400k -profile:v baseline -level 3.0 -vf scale=\"426:trunc(ow/a/2)*2\" -y'),(5,'480p4',1,'MPEG-4','AVC',800000,480,640,1.33,800000,640,'-async 1 -b 800k -vf scale=640:trunc(ow/a/2)*2 -vcodec libx264 -flags +loop -me_method hex -g 60 -qcomp 0.6 -qmin 10 -qmax 51 -qdiff 4 -bf 3 -b_strategy 1 -i_qfactor 0.71 -cmp +chroma -subq 8 -me_range 16 -coder 1 -sc_threshold 40 -flags2 +bpyramid+wpred+mixed_refs-dct8x8+fastpskip -keyint_min 25 -refs 3 -trellis 1 -level 31 -directpred 1 -partitions -parti8x8-parti4x4-partp8x8-partp4x4-partb8x8 -threads 0 -acodec aac -strict experimental -ar 44100 -ab 128k -deinterlace -metadata comment=Encoded_by_UFT -y'),(6,'360p4',1,'MPEG-4','AVC',500000,360,480,1.33,500000,480,'-async 1 -b 500k -vf scale=480:trunc(ow/a/2)*2 -vcodec libx264 -flags +loop -me_method hex -g 60 -qcomp 0.6 -qmin 10 -qmax 51 -qdiff 4 -bf 0 -b_strategy 1 -i_qfactor 0.71 -cmp +chroma -subq 8 -me_range 16 -coder 0 -sc_threshold 40 -flags2 +bpyramid-wpred+mixed_refs-dct8x8+fastpskip -wpredp 0 -keyint_min 25 -refs 3 -trellis 1 -level 30 -directpred 1 -partitions -parti8x8-parti4x4-partp8x8-partp4x4-partb8x8 -threads 0 -acodec aac -strict experimental -ar 44100 -ab 96k -deinterlace -metadata comment=Encoded_by_UFT -y'),(7,'240p4',1,'MPEG-4','AVC',250000,240,320,1.33,0,0,'-async 1 -r 15 -b 250k -vf scale=320:trunc(ow/a/2)*2 -vcodec libx264 -flags +loop -me_method hex -g 60 -qcomp 0.6 -qmin 10 -qmax 51 -qdiff 4 -bf 0 -b_strategy 1 -i_qfactor 0.71 -cmp +chroma -subq 8 -me_range 16 -coder 0 -sc_threshold 40 -flags2 +bpyramid-wpred+mixed_refs-dct8x8+fastpskip -wpredp 0 -keyint_min 25 -refs 3 -trellis 1 -level 30 -directpred 1 -partitions -parti8x8-parti4x4-partp8x8-partp4x4-partb8x8 -threads 0 -acodec aac -strict experimental -ar 22050 -ab 32k -deinterlace -metadata comment=Encoded_by_UFT -y');
 /*!40000 ALTER TABLE `video_profile` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -228,4 +218,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-07-24 19:17:26
+-- Dump completed on 2015-11-29 18:14:29

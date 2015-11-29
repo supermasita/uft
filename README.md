@@ -1,5 +1,5 @@
-# UNATTENDED FFMPEG ENCODER                     
-### https://github.com/supermasita/ufe             	     
+# UNATTENDED FFMPEG TRANSCODER                     
+### https://github.com/supermasita/uft             	     
 
 WORD OF WARNING: 
 This proyect is in a development stage and not even the README is complete. 
@@ -7,8 +7,8 @@ This proyect is in a development stage and not even the README is complete.
 
 
 1. INTRODUCTION
-1.1 What is UFE ?
-1.2 What is not UFE ?
+1.1 What is UFT ?
+1.2 What is not UFT ?
 1.3 Features
 1.4 To-do
 1.5 Credits
@@ -21,7 +21,7 @@ This proyect is in a development stage and not even the README is complete.
 2.5 Configuration
 2.6 Installing crons
 
-3. USING UFE
+3. USING UFT
 3.1 Encoding workflow
 3.1.1 Checker
 3.1.2 Encoder
@@ -36,32 +36,32 @@ This proyect is in a development stage and not even the README is complete.
 1. INTRODUCTION
 
 
-1.1 What is UFE?
+1.1 What is UFT?
 
-	UFE started as a bunch scripts used to encode and upload video in a 
+	UFT started as a bunch scripts used to encode and upload video in a 
 completely unattended way. The goal is to make the encoding and uploading easy 
 and foolproof, using presets to "normalize" all your videos, providing encoding 
 best practices and specific quality for each device (broadband, mobile, etc.).
 	
-	When thinking UFE we had in mind the webmaster (or journalist, etc.) 
+	When thinking UFT we had in mind the webmaster (or journalist, etc.) 
 that has to encode several videos in different qualities for various websites, 
-and upload them; UFE will make things easier.
+and upload them; UFT will make things easier.
 
-	You can use UFE as a centralize solution for encoding videos, leaving
+	You can use UFT as a centralize solution for encoding videos, leaving
 the encoding profiles to the Admin and not to the users, disabling them from
 FTP access and not hogging their computers with CPU intensive tasks.
 
-	UFE could be thought as a simple alternative to other encoding software 
+	UFT could be thought as a simple alternative to other encoding software 
 such as: Handbrake, Sorenson Squeeze, Windows Movie Maker, etc. 
 
 
 
-1.2 What is not UFE?
+1.2 What is not UFT?
 
-	UFE is not a fully featured video edition and encoding software. We 
+	UFT is not a fully featured video edition and encoding software. We 
 focus on simple and reliable operation. 
 
-	We plan to extend UFE with other proyects built around it but the "core" 
+	We plan to extend UFT with other proyects built around it but the "core" 
 will always be as simple as possible.
 
 
@@ -126,21 +126,21 @@ doubt about installation.
 
 2.2 Creating directories
 	
-	1- Create a directory for the scripts (ex: /var/www/html/ufe/), where you will
+	1- Create a directory for the scripts (ex: /var/www/html/uft/), where you will
 	do the "git clone" or untar.
 	2- Inside this directory create the following ones :
-		* "video_original" : where UFE temporaly moves original videos.
-		* "video_encoded" : where UFE temporaly stores encoded videos.
+		* "video_original" : where UFT temporaly moves original videos.
+		* "video_encoded" : where UFT temporaly stores encoded videos.
 
 
 2.3 Creating database
 	
-	1- Create a database called "ufe" (or whatever you like).
-	2- Create a user ("ufe") and grants to use the database.
+	1- Create a database called "uft" (or whatever you like).
+	2- Create a user ("uft") and grants to use the database.
 	3- Use the dump located in "lib" to create the tables, like this
 	   (from command line):
    	   
-	   [you@you ufe]$ mysql -u ufe -D ufe -p < lib/database_structure.sql
+	   [you@you uft]$ mysql -u uft -D uft -p < lib/database_structure.sql
 	
 	(!) USE THE DB, USER AND PASS THAT YOU CREATED IN STEP 1 AND 2
 
@@ -181,17 +181,17 @@ Many sites can be configured in the same fashion. We will extend this README.
 	You will need the following crons running (change accordingly to your
 	needs and setup):
 
-	# UFE : MAIN
-	* * * * * python /var/www/html/ufe/ufe-add.py -a dir -s default -f /var/tmp/videos/ > /var/tmp/ufe-add.log 2>&1
-	* * * * * python /var/www/html/ufe/ufe-encode.py > /var/tmp/ufe-encode.log 2>&1
-	* * * * * python /var/www/html/ufe/ufe-upload.py > /var/tmp/ufe-upload.log 2>&1
+	# UFT : MAIN
+	* * * * * python /var/www/html/uft/uft-add.py -a dir -s default -f /var/tmp/videos/ > /var/tmp/uft-add.log 2>&1
+	* * * * * python /var/www/html/uft/uft-encode.py > /var/tmp/uft-encode.log 2>&1
+	* * * * * python /var/www/html/uft/uft-upload.py > /var/tmp/uft-upload.log 2>&1
 	# (next line only if u want estimate encode progress on DB)
-	* * * * * python /var/www/html/ufe/ufe-progress.py > /var/tmp/ufe-progress.log 2>&1
-	# UFE : RECYCLING
-	* * * * * python /var/www/html/ufe/ufe-recycle.py -r encoded > /var/tmp/ufe-recycle_encoded.log 2>&1
-	* * * * * python /var/www/html/ufe/ufe-recycle.py -r original > /var/tmp/ufe-recycle_original.log 2>&1
-	* * * * * python /var/www/html/ufe/ufe-recycle.py -r registers >/var/tmp/ufe-recycle_registers.log 2>&1
-	* * * * * python /var/www/html/ufe/ufe-recycle.py -r nonvideos >/var/tmp/ufe-recycle_nonvideos.log 2>&1
+	* * * * * python /var/www/html/uft/uft-progress.py > /var/tmp/uft-progress.log 2>&1
+	# UFT : RECYCLING
+	* * * * * python /var/www/html/uft/uft-recycle.py -r encoded > /var/tmp/uft-recycle_encoded.log 2>&1
+	* * * * * python /var/www/html/uft/uft-recycle.py -r original > /var/tmp/uft-recycle_original.log 2>&1
+	* * * * * python /var/www/html/uft/uft-recycle.py -r registers >/var/tmp/uft-recycle_registers.log 2>&1
+	* * * * * python /var/www/html/uft/uft-recycle.py -r nonvideos >/var/tmp/uft-recycle_nonvideos.log 2>&1
 	
 -------------------------------------------------------------------------------
 	ALTERNATIVE IDEAS:
@@ -200,19 +200,19 @@ Many sites can be configured in the same fashion. We will extend this README.
 	* You could use DAEMON TOOLS ( http://cr.yp.to/daemontools.html )
 -------------------------------------------------------------------------------
 
-3. USING UFE
+3. USING UFT
 
 3.1 Encoding workflow
 	
-	* "ufe-checker" will scan the directory and if it finds that the file
+	* "uft-checker" will scan the directory and if it finds that the file
 	has not been modified in a given time period (defined in "config.py") 
 	and continue.
 
-	* Using "ufe-add" you will add videos for encoding in two different ways:
+	* Using "uft-add" you will add videos for encoding in two different ways:
 		1- Adding an specific file. 
-		   (ex: ufe-add.py -a file -s default -f /var/tmp/videos/lalala.avi)
+		   (ex: uft-add.py -a file -s default -f /var/tmp/videos/lalala.avi)
 		2- Adding all videos in a directory.
-		   (ex: ufe-add.py -a dir -s default -f /var/tmp/videos/)
+		   (ex: uft-add.py -a dir -s default -f /var/tmp/videos/)
 		   The directory will be scanned and only files update before a 
 		   given time period (defined in "config.py") will be added.
 
@@ -224,12 +224,12 @@ Many sites can be configured in the same fashion. We will extend this README.
 	"video_profile" defined in "video_profile" table that is globally 
 	enabled, matches the video aspect ratio and is enabled for the site.
 
-	* "ufe-encode" is spawned and it will encode any pending video.
+	* "uft-encode" is spawned and it will encode any pending video.
 
-	* After each encoding, "ufe-upload" is spawned and any pending upload
+	* After each encoding, "uft-upload" is spawned and any pending upload
 	video is uploaded. 
 
-	* "ufe-recycle" will erase :
+	* "uft-recycle" will erase :
 		* encoded videos that have already been successfully uploaded.
 		* original videos, whose encoded videos have been already recycled.
 		* registers for those videos whose encoded and original videos have 

@@ -1,8 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
-# UNATTENDED FFMPEG ENCODER
-# https://github.com/supermasita/ufe  
+# UNATTENDED FFMPEG TRANSCODER
+# https://github.com/supermasita/uft  
 # 
 
 from lib.common import *
@@ -15,13 +15,13 @@ import getopt
 ##
 ###
 
-def ufe_control_usage():
-        """Prints the usage of "ufe-control".
+def uft_control_usage():
+        """Prints the usage of "uft-control".
         """
         print """
         Usage example : 
         
-        ufe-control.py -a status_check -v {vhash}
+        uft-control.py -a status_check -v {vhash}
 
         """
 
@@ -35,7 +35,7 @@ argv = sys.argv[1:]
 try :
         opts, args = getopt.getopt(argv, "a:v:")
 except :
-        ufe_control_usage()
+        uft_control_usage()
         sys.exit(2)
 
 # Assign parameters as variables
@@ -52,10 +52,10 @@ if vars().has_key('action') and vars().has_key('vhash'):
 		print indented_status_json
 	else :
 		print "\nWrong parameters..."
-		ufe_control_usage()
+		uft_control_usage()
 		sys.exit(2)
 else :
 	print "\nWrong parameters..."
-	ufe_control_usage()
+	uft_control_usage()
 	sys.exit(2)
 
