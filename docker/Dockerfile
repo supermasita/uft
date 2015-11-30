@@ -77,5 +77,6 @@ ADD crontab.example /var/spool/cron/root
 EXPOSE 3306 80
 
 # RUN, FORREST! RUN!
+RUN yum install -y supervisor
 ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
