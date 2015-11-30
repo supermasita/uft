@@ -31,7 +31,9 @@ ENV UFTHOME /opt
 
 # FFMPEG
 
-RUN yum -y install autoconf automake cmake freetype-devel gcc gcc-c++ git libtool make mercurial nasm pkgconfig zlib-devel tar
+RUN yum install -y epel-release
+
+RUN yum -y install autoconf automake cmake freetype-devel gcc gcc-c++ git libtool make mercurial nasm pkgconfig zlib-devel tar which
 
 RUN mkdir /usr/local/src/ffmpeg_sources
 
@@ -57,8 +59,6 @@ RUN cd /usr/local/src/ffmpeg_sources && git clone --depth 1 git://source.ffmpeg.
 
 
 # UFT
-
-RUN yum install -y epel-release
 
 RUN yum install -y python-pip mediainfo mysql mysql-server gcc MySQL-python vim git syslog cronie
 
