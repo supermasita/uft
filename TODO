@@ -1,8 +1,8 @@
-- DONE! replace ufe-checker with ufe-add
-- DONE! create ufe-recycle with parameters, to the 3 recycling
+- DONE! replace uft-checker with uft-add
+- DONE! create uft-recycle with parameters, to the 3 recycling
   script we have
-- DONE! create ufe-control (use vhash as parameter to check status)
-- DONE! replace ufe-ftp with ufe-upload, with option to use ftp or
+- DONE! create uft-control (use vhash as parameter to check status)
+- DONE! replace uft-ftp with uft-upload, with option to use ftp or
   move to folder
 - DONE! what to do if uploaded file is not a video? (has insufficient
   metadata)

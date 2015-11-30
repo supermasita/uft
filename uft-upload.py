@@ -1,8 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
-# UNATTENDED FFMPEG ENCODER
-# https://github.com/supermasita/ufe  
+# UNATTENDED FFMPEG TRANSCODER
+# https://github.com/supermasita/uft  
 # 
 
 from lib.config import *
@@ -56,7 +56,7 @@ def update_ftp_status(state, u_vhash, u_vpid):
 
 # Check PID file
 pid = str(os.getpid())
-pidfile = "%s/ufe-upload.pid" % tmppath
+pidfile = "%s/uft-upload.pid" % tmppath
 if os.path.isfile(pidfile):
         logthis('%s already exists. The process should be running.' % pidfile)
 	sys.exit()

@@ -1,10 +1,6 @@
 # compiled python
 *.pyc
 
-# video folders
-video_encoded
-video_original
-
 # vim swp
 *.swp
 
@@ -14,9 +10,3 @@ video_original
 *.flv
 *.mpg
 *.mov
-
-# folder were i keep crap
-byebye
-
-# test file
-test.py

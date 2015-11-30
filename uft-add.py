@@ -1,8 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
-# UNATTENDED FFMPEG ENCODER
-# https://github.com/supermasita/ufe  
+# UNATTENDED FFMPEG TRANSCODER
+# https://github.com/supermasita/uft  
 # 
 
 from lib.config import *
@@ -24,14 +24,14 @@ import getopt
 ##
 ###
 
-def ufe_add_usage():
-        """Prints the usage of "ufe-add".
+def uft_add_usage():
+        """Prints the usage of "uft-add".
         """
         print """
         Usage example : 
         
-        ufe-add.py -a file -s default -f /var/tmp/lalala.avi
-        ufe-add.py -a dir -s default -f /var/tmp/
+        uft-add.py -a file -s default -f /var/tmp/lalala.avi
+        uft-add.py -a dir -s default -f /var/tmp/
         
         -a      Add file or directory
         -s      Name of the site 
@@ -45,7 +45,7 @@ argv = sys.argv[1:]
 try :
         opts, args = getopt.getopt(argv, "a:s:f:")
 except :
-        ufe_add_usage()
+        uft_add_usage()
         sys.exit(2)
 
 # Assign parameters as variables
@@ -109,7 +109,7 @@ if vars().has_key('add') and vars().has_key('site_name') and vars().has_key('fil
 		# Initialize spawn
 		spawn = False 
 		# Check PID file 
-		pidfilename = "%s/ufe-add-dir.pid" % tmppath
+		pidfilename = "%s/uft-add-dir.pid" % tmppath
 		if os.path.isfile(pidfilename):
 			logthis('%s already exists. The process should be running.' % pidfilename, stdout=1)
 			sys.exit()
@@ -169,7 +169,7 @@ if vars().has_key('add') and vars().has_key('site_name') and vars().has_key('fil
 	
 	else :
 		print "\nPlease check parameters... Do you want to add a 'file' or a 'dir'?"
-		ufe_add_usage()
+		uft_add_usage()
 		sys.exit(2)
         
 	# Spawn encode
@@ -178,5 +178,5 @@ if vars().has_key('add') and vars().has_key('site_name') and vars().has_key('fil
 
 else :
         print "\nParameters missing ..."
-	ufe_add_usage()
+	uft_add_usage()
 	sys.exit(2)
