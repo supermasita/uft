@@ -23,7 +23,7 @@ server_name = "TRX01"
 
 # DB credentials
 db_host = "localhost"
-db_user = "uft"
+db_user = "root"
 db_pass = ""
 db_database = "uft"
 

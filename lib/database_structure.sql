@@ -80,7 +80,7 @@ CREATE TABLE `sites` (
 
 LOCK TABLES `sites` WRITE;
 /*!40000 ALTER TABLE `sites` DISABLE KEYS */;
-INSERT INTO `sites` VALUES (1,'default',1,'','/var/tmp/uft-uploaded','0','uft','uftpassword','127.0.0.1',0,NULL,3);
+INSERT INTO `sites` VALUES (1,'default',1,'','/opt/uft/video-files/default-site-output','0','uft','uftpassword','127.0.0.1',0,NULL,3);
 /*!40000 ALTER TABLE `sites` ENABLE KEYS */;
 UNLOCK TABLES;
 
