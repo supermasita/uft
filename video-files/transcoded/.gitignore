@@ -2,7 +2,3 @@
 *
 # Except this file
 !.gitignore
-!sources
-!watchfolder
-!transcoded
-!default-site-output
