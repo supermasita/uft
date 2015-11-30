@@ -1,0 +1,11 @@
+# UFT : MAIN
+* * * * * python /opt/uft/uft-add.py -a dir -s default -f /opt/uft/video-files/watchfolder/ > /var/tmp/uft-add.cron.out 2>&1
+* * * * * python /opt/uft/uft-encode.py > /var/tmp/uft-encode.cron.out 2>&1
+* * * * * python /opt/uft/uft-upload.py > /var/tmp/uft-upload.cron.out 2>&1
+# (next line only if u want estimate encode p.cron.outress on DB)
+* * * * * python /opt/uft/uft-progress.py > /var/tmp/uft-progress.cron.out 2>&1
+# UFT : RECYCLING
+* * * * * python /opt/uft/uft-recycle.py -r encoded > /var/tmp/uft-recycle_encoded.cron.out 2>&1
+* * * * * python /opt/uft/uft-recycle.py -r original > /var/tmp/uft-recycle_original.cron.out 2>&1
+* * * * * python /opt/uft/uft-recycle.py -r registers >/var/tmp/uft-recycle_registers.cron.out 2>&1
+* * * * * python /opt/uft/uft-recycle.py -r nonvideos >/var/tmp/uft-recycle_nonvideos.cron.out 2>&1
