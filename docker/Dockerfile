@@ -1,24 +1,24 @@
-############################################################
-       Dockerfile to build image for UFT on Centos6
-            https://github.com/supermasita/uft
-############################################################
-
-Build:
-
-Inside "docker" dir, run:
-> sudo docker build -t "uft" . 
-
-Run (example):
-> sudo docker run -d -p 3306:3306  \ 
--v /host-watchfolder:/opt/uft/video-files/watchfolder \
--v /host-output:/opt/uft/video-files/default-site-output  \ 
---name="uft" --hostname="uft" -t uft
-
-Accesing the container:
-> sudo docker exec -i -t uft /bin/bash
-
-            
-############################################################
+#############################################################
+#       Dockerfile to build image for UFT on Centos6
+#            https://github.com/supermasita/uft
+#############################################################
+#
+# Build:
+# 
+# Inside "docker" dir, run:
+# > sudo docker build -t "uft" . 
+# 
+# Run (example):
+# > sudo docker run -d -p 3306:3306  \ 
+# -v /host-watchfolder:/opt/uft/video-files/watchfolder \
+# -v /host-output:/opt/uft/video-files/default-site-output  \ 
+# --name="uft" --hostname="uft" -t uft
+# 
+# Accesing the container:
+# > sudo docker exec -i -t uft /bin/bash
+#
+#            
+#############################################################
 
 
 FROM centos:centos6
@@ -29,9 +29,7 @@ ENV HOME /usr/local
 ENV UFTHOME /opt
 
 
-#############
-   FFMPEG
-#############
+# FFMPEG
 
 RUN yum -y install autoconf automake cmake freetype-devel gcc gcc-c++ git libtool make mercurial nasm pkgconfig zlib-devel tar
 
@@ -58,9 +56,7 @@ RUN cd /usr/local/src/ffmpeg_sources && git clone --depth 1 https://chromium.goo
 RUN cd /usr/local/src/ffmpeg_sources && git clone --depth 1 git://source.ffmpeg.org/ffmpeg && cd ffmpeg && PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig" ./configure --prefix="$HOME/ffmpeg_build" --extra-cflags="-I$HOME/ffmpeg_build/include" --extra-ldflags="-L$HOME/ffmpeg_build/lib" --bindir="$HOME/bin" --pkg-config-flags="--static" --enable-gpl --enable-nonfree --enable-libfdk-aac --enable-libfreetype --enable-libmp3lame --enable-libopus --enable-libvorbis --enable-libvpx --enable-libx264 --enable-libx265 && make && make install && make distclean && hash -r
 
 
-#########
-   UFT
-#########
+# UFT
 
 RUN yum install -y epel-release
 
@@ -83,4 +79,3 @@ EXPOSE 3306 80
 # RUN, FORREST! RUN!
 ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
-
