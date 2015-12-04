@@ -41,7 +41,8 @@ RUN cd /usr/local/src/ffmpeg_sources && git clone --depth 1 git://github.com/yas
 
 RUN cd /usr/local/src/ffmpeg_sources && git clone --depth 1 git://git.videolan.org/x264 && cd x264 && PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig" ./configure --prefix="$HOME/ffmpeg_build" --bindir="$HOME/bin" --enable-static && make && make install && make distclean
 
-RUN cd /usr/local/src/ffmpeg_sources && hg clone https://bitbucket.org/multicoreware/x265 && cd /usr/local/src/ffmpeg_sources/x265/build/linux && cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="$HOME/ffmpeg_build" -DENABLE_SHARED:bool=off ../../source && make && make install
+# Commented for recent issue in H265 - https://bitbucket.org/multicoreware/x265/issues/125/x265-not-found-using-pkg-config
+#RUN cd /usr/local/src/ffmpeg_sources && hg clone https://bitbucket.org/multicoreware/x265 && cd /usr/local/src/ffmpeg_sources/x265/build/linux && cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="$HOME/ffmpeg_build" -DENABLE_SHARED:bool=off ../../source && make && make install
 
 RUN cd /usr/local/src/ffmpeg_sources && git clone --depth 1 git://git.code.sf.net/p/opencore-amr/fdk-aac && cd fdk-aac && autoreconf -fiv && ./configure --prefix="$HOME/ffmpeg_build" --disable-shared && make && make install && make distclean
 
@@ -55,7 +56,9 @@ RUN cd /usr/local/src/ffmpeg_sources && curl -O http://downloads.xiph.org/releas
 
 RUN cd /usr/local/src/ffmpeg_sources && git clone --depth 1 https://chromium.googlesource.com/webm/libvpx.git && cd libvpx && ./configure --prefix="$HOME/ffmpeg_build" --disable-examples && make && make install && make clean
 
-RUN cd /usr/local/src/ffmpeg_sources && git clone --depth 1 git://source.ffmpeg.org/ffmpeg && cd ffmpeg && PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig" ./configure --prefix="$HOME/ffmpeg_build" --extra-cflags="-I$HOME/ffmpeg_build/include" --extra-ldflags="-L$HOME/ffmpeg_build/lib" --bindir="$HOME/bin" --pkg-config-flags="--static" --enable-gpl --enable-nonfree --enable-libfdk-aac --enable-libfreetype --enable-libmp3lame --enable-libopus --enable-libvorbis --enable-libvpx --enable-libx264 --enable-libx265 && make && make install && make distclean && hash -r
+# Commented for recent issue in H265 - https://bitbucket.org/multicoreware/x265/issues/125/x265-not-found-using-pkg-config
+#RUN cd /usr/local/src/ffmpeg_sources && git clone --depth 1 git://source.ffmpeg.org/ffmpeg && cd ffmpeg && PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig" ./configure --prefix="$HOME/ffmpeg_build" --extra-cflags="-I$HOME/ffmpeg_build/include" --extra-ldflags="-L$HOME/ffmpeg_build/lib" --bindir="$HOME/bin" --pkg-config-flags="--static" --enable-gpl --enable-nonfree --enable-libfdk-aac --enable-libfreetype --enable-libmp3lame --enable-libopus --enable-libvorbis --enable-libvpx --enable-libx264 --enable-libx265 && make && make install && make distclean && hash -r
+RUN cd /usr/local/src/ffmpeg_sources && git clone --depth 1 git://source.ffmpeg.org/ffmpeg && cd ffmpeg && PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig" ./configure --prefix="$HOME/ffmpeg_build" --extra-cflags="-I$HOME/ffmpeg_build/include" --extra-ldflags="-L$HOME/ffmpeg_build/lib" --bindir="$HOME/bin" --pkg-config-flags="--static" --enable-gpl --enable-nonfree --enable-libfdk-aac --enable-libfreetype --enable-libmp3lame --enable-libopus --enable-libvorbis --enable-libvpx --enable-libx264 && make && make install && make distclean && hash -r
 
 
 # UFT
