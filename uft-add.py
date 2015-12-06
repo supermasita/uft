@@ -10,19 +10,11 @@ from lib.add import *
 from lib.common import *
 from lib.control import status_check
 
-#
-##
-###
-
 import MySQLdb
 import shutil
 import sys
 import simplejson
 import getopt
-
-#
-##
-###
 
 def uft_add_usage():
         """Prints the usage of "uft-add".
