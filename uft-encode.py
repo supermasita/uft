@@ -7,10 +7,6 @@
 
 from lib.encode import *
 
-#
-##
-###
-
 """Checks for pending videos and encodes them. 
 """
 
@@ -28,7 +24,6 @@ while check_pending == 1 :
 			# Get data for next encode and process 
 			pending_encode, vhash, vpid, encode_status, filename_san, encode_file, param = select_next_encode()
 			encode_video_ffmpeg(vhash, vpid, filename_san, encode_file, param)
-			print param
 			# Spawn ftp.py
 			spawn_process("upload")
 		else :

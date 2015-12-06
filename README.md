@@ -36,15 +36,14 @@ We plan to extend UFT with other proyects built around it but the "core" will al
 * Video presets: you can create your own, enable/disable them (globally 
   or per site).
 * Simple MySQL structure (no auto increments, no joins).
-* Multiserver in mind (many encoders and master-master DB).
-* Uploads to FTP server (or local directory) using year, month, date 
+* Uploads to FTP server or directory using year, month, date 
   folder structure.
 * Maximum number of FFMPEG processes may be configured for each encoder
   (default: 2).
 * Non-blocking weighted queues won't let a huge video consume all your 
   processes and leave all other waiting.
-* Logging in sys.cron.out.
-* Per video FFMPEG .cron.out.
+* Logging in syslog.
+* Per video FFMPEG log.
 * Video hinting.
 
 
@@ -65,7 +64,6 @@ Try quickly by building an image with the included Dockerfile
 * "MySQL-python" http://sourceforge.net/projects/mysql-python/ 
 * "python-simplejson" http://pypi.python.org/pypi/simplejson/ 
 * "FFMPEG" http://ffmpeg.org/ 
-   (if using RHEL best install it from http://atrpms.net/)
 * "Medianfo CLI" http://mediainfo.sourceforge.net/
 
 #### Creating database
@@ -119,7 +117,7 @@ You will need the following crons running (change accordingly to your needs and 
 	* * * * * python /opt/uft/uft-recycle.py -r nonvideos >/var/tmp/uft-recycle_nonvideos.cron.out 2>&1
 	
 """
-ALTERNATIVE IDEAS:
+Other ideas:
 * You could use inotify to monitor last access of files with INCRON 
   ( http://inotify.aiken.cz/ )
 * You could use DAEMON TOOLS ( http://cr.yp.to/daemontools.html )
