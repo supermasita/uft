@@ -1,5 +1,5 @@
 #
-# PYMEDIAINFO : A Python wrapper around the MediaInfo command line utility  
+# PYMEDIAINFO : A Python wrapper around the MediaInfo command line utility
 # https://github.com/paltman/pymediainfo
 # Copyright (c) 2010 Patrick Altman <paltman@gmail.com>
 #
@@ -107,9 +107,9 @@ class MediaInfo(object):
     def parse(filename, environment=ENV_DICT):
         #command = ["mediainfo", "-f", "--Output=XML", filename]
         # Fix to able add files which filenames have spaces
-	command = ["mediainfo", "-f", "--Output=XML", "%s" % filename]
+        command = ["mediainfo", "-f", "--Output=XML", "%s" % filename]
         #
-	fileno_out, fname_out = mkstemp(suffix=".xml", prefix="media-")
+        fileno_out, fname_out = mkstemp(suffix=".xml", prefix="media-")
         fileno_err, fname_err = mkstemp(suffix=".err", prefix="media-")
         fp_out = os.fdopen(fileno_out, 'r+b')
         fp_err = os.fdopen(fileno_err, 'r+b')
@@ -120,11 +120,11 @@ class MediaInfo(object):
         xml_dom = MediaInfo.parse_xml_data_into_dom(fp_out.read())
         fp_out.close()
         fp_err.close()
-	# Added os.remove because temp file wont erase ...
-	os.remove(fname_out)
-	os.remove(fname_err)
-	#
-	return MediaInfo(xml_dom)
+        # Added os.remove because temp file wont erase ...
+        os.remove(fname_out)
+        os.remove(fname_err)
+        #
+        return MediaInfo(xml_dom)
 
     def _populate_tracks(self):
         if self.xml_dom is None:

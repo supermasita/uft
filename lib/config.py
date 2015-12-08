@@ -3,7 +3,7 @@
 #
 # UNATTENDED FFMPEG TRANSCODER
 # https://github.com/supermasita/uft
-# 
+#
 
 # Core root
 core_root = "/opt/uft/"
