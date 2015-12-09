@@ -127,14 +127,15 @@ def encode_video_ffmpeg(e_vhash, e_vpid, e_filename_san, e_encode_file, e_param)
         update_vp_quantity(1, 'vp_error', e_vhash)
     else :
         logthis("Encode successful : %s" % e_encode_file)
-        logthis("Hinting started : %s" % e_encode_file)
-        # We use qt-faststart for hinting
-        qt_command = '%s/lib/qtfaststart.py %s' % (core_root, destination)
-        qt_commandlist = qt_command.split(" ")
-        qt_log_file = open("%s/%s/%s.qt.log" % (encoded, e_vhash, e_encode_file_name), "wb")
-        qt_output = subprocess.call(qt_commandlist, stderr=qt_log_file, stdout=qt_log_file)
-        #
-        logthis("Hinting successful : %s" % e_encode_file)
+        ### Deprecated qtfaststart and using '-movflags faststart' in ffmpeg
+	#logthis("Hinting started : %s" % e_encode_file)
+        ## We use qt-faststart for hinting
+        #qt_command = '%s/lib/qtfaststart.py %s' % (core_root, destination)
+        #qt_commandlist = qt_command.split(" ")
+        #qt_log_file = open("%s/%s/%s.qt.log" % (encoded, e_vhash, e_encode_file_name), "wb")
+        #qt_output = subprocess.call(qt_commandlist, stderr=qt_log_file, stdout=qt_log_file)
+        ##
+        #logthis("Hinting successful : %s" % e_encode_file)
         update_encode_status(3, e_vhash, e_vpid)
         update_vp_quantity(-1, 'vp_run', e_vhash)
         # Try to create JSON file
