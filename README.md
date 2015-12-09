@@ -22,14 +22,6 @@ You can use UFT as a centralize solution for encoding videos, leaving the encodi
 UFT could be thought as a simple alternative to other encoding software such as: Handbrake, Sorenson Squeeze, Windows Movie Maker, etc. 
 
 
-
-####  What is not UFT?
-
-UFT is not a fully featured video edition and encoding software. We focus on simple and reliable operation. 
-
-We plan to extend UFT with other proyects built around it but the "core" will always be as simple as possible.
-
-
 #### Features
 	
 * Multisite in mind. 
@@ -38,20 +30,10 @@ We plan to extend UFT with other proyects built around it but the "core" will al
 * Simple MySQL structure (no auto increments, no joins).
 * Uploads to FTP server or directory using year, month, date 
   folder structure.
-* Maximum number of FFMPEG processes may be configured for each encoder
-  (default: 2).
+* Maximum number of FFMPEG processes may be configured for each encoder.
 * Non-blocking weighted queues won't let a huge video consume all your 
   processes and leave all other waiting.
 * Logging in syslog.
-* Per video FFMPEG log.
-* Video hinting.
-
-
-#### Additional credits
-
-* "Pymediainfo" - Wrapper for Mediainfo CLI - https://github.com/paltman/pymediainfo
-* "qt-faststart" - Used to hint videos - https://github.com/danielgtaylor/qtfaststart
-
 
 ### INSTALLING
 
@@ -61,10 +43,10 @@ Try quickly by building an image with the included Dockerfile
 
 #### Dependencies
 
-* "MySQL-python" http://sourceforge.net/projects/mysql-python/ 
-* "python-simplejson" http://pypi.python.org/pypi/simplejson/ 
-* "FFMPEG" http://ffmpeg.org/ 
-* "Medianfo CLI" http://mediainfo.sourceforge.net/
+	yum install -y python-pip mediainfo mysql mysql-server gcc MySQL-python syslog
+
+	pip install simple-json pymediainfo
+
 
 #### Creating database
 	
