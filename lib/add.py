@@ -123,27 +123,6 @@ def create_video_registry(vhash, filename_orig, filename_san, video_br, video_w,
     # Check profiles enabled for the site - NULL will use all profiles enabled globally
     cursor.execute("select vp_enabled from sites where id=%i;" % site_id )
     vp_enabled=cursor.fetchall()[0]
-    ## Check the aspect ratio of the video and choose profiles?
-    #aspect_split=1.6
-    #aspect_wide=1.77
-    #aspect_square=1.33
-    # Choose video profile based on aspect ratio and min_video_w (TODO: check min_video_br)
-    ## 4:3
-    #if aspect_r <= aspect_split :
-    #    if vp_enabled[0] is None :
-    #        cursor.execute("select vpid, profile_name, video_br, video_w, video_f, file_format from video_profile where %i>=min_video_w and round(aspect_r,2)=%f and enabled='1';" % (video_w, aspect_square))
-    #        resultado=cursor.fetchall()
-    #    else :
-    #        cursor.execute("select vpid, profile_name, video_br, video_w, video_f, file_format from video_profile where %i>=min_video_w and round(aspect_r,2)=%f and enabled='1' and vpid in (%s);" % (video_w, aspect_square, vp_enabled[0]) )
-    #        resultado=cursor.fetchall()
-    ## 16:9
-    #elif aspect_r > aspect_split :
-    #    if vp_enabled[0] is None :
-    #        cursor.execute("select vpid, profile_name, video_br, video_w, video_f, file_format from video_profile where %i>=min_video_w and round(aspect_r,2)=%f and enabled='1';" % (video_w, aspect_wide))
-    #        resultado=cursor.fetchall()
-    #    else :
-    #        cursor.execute("select vpid, profile_name, video_br, video_w, video_f, file_format from video_profile where %i>=min_video_w and round(aspect_r,2)=%f and enabled='1' and vpid in (%s);" % (video_w, aspect_wide, vp_enabled[0]) )
-    #        resultado=cursor.fetchall()
     if vp_enabled[0] is None :
         cursor.execute("select vpid, profile_name, video_br, video_w, video_f, file_format from video_profile where %i>=min_video_w and enabled='1';" % (video_w))
         resultado=cursor.fetchall()
@@ -177,24 +156,6 @@ def create_video_registry(vhash, filename_orig, filename_san, video_br, video_w,
         month=time.strftime("%m", time.localtime())
         day=time.strftime("%d", time.localtime())
         ftp_path="%s/%s/%s" % (year, month, day)
-        ## Skip transcoding if the original file matches target quality
-        #if (vp_video_f == video_f) and (video_br in range(vp_video_br-100000,vp_video_br+100000)) and (vp_file_format == file_format):
-        #    # Add registry with encode_status as done
-        #    cursor.execute("insert into video_encoded set encode_status=3, vhash='%s', vpid=%i, encode_file='%s', t_created='%s', weight=%i, ftp_path='%s', site_id=%i, server_name='%s';" % (vhash, vpid, encode_file, t_created, weight, ftp_path, site_id, server_name) )
-        #    # Create directory if it doesnt exists
-        #    if not os.path.exists('%s/%s' % (encoded, vhash)):
-        #        os.makedirs('%s/%s' % (encoded, vhash))
-        #    # Copy file with vp name
-        #    shutil.copy(os.path.join(root,file), "%s/%s/%s" % (encoded, vhash, encode_file))
-        #    # Create fake FFMPEG log
-        #    log_filename="%s-%s.log" % (filename_san_n, profile_name)
-        #    log_file=open("%s/%s/%s" % (encoded, vhash, log_filename), "w")
-        #    log_file.write("File was not transcoded: original video matched profile\n")
-        #    log_file.close()
-        #    logthis('%s will not be transcoded: original video matched profile' % encode_file, stdout=0)
-        #else:
-        #    # We insert registrys for each video profile
-        #    cursor.execute("insert into video_encoded set vhash='%s', vpid=%i, encode_file='%s', t_created='%s', weight=%i, ftp_path='%s', site_id=%i, server_name='%s', priority='%s';" % (vhash, vpid, encode_file, t_created, weight, ftp_path, site_id, server_name, priority) )
         cursor.execute("insert into video_encoded set vhash='%s', vpid=%i, encode_file='%s', t_created='%s', weight=%i, ftp_path='%s', site_id=%i, server_name='%s', priority='%s';" % (vhash, vpid, encode_file, t_created, weight, ftp_path, site_id, server_name, priority) )
         db.commit ()
         #
