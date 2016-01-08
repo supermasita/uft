@@ -3,9 +3,8 @@
 # https://github.com/paltman/pymediainfo
 # Copyright (c) 2010 Patrick Altman <paltman@gmail.com>
 #
-# Modified by Supermasita
 
-from subprocess import Popen
+from subprocess import Popen, PIPE
 from xml.dom import minidom
 import os, sys
 from xml.parsers.expat import ExpatError
@@ -105,25 +104,14 @@ class MediaInfo(object):
 
     @staticmethod
     def parse(filename, environment=ENV_DICT):
-        #command = ["mediainfo", "-f", "--Output=XML", filename]
-        # Fix to able add files which filenames have spaces
-        command = ["mediainfo", "-f", "--Output=XML", "%s" % filename]
-        #
-        fileno_out, fname_out = mkstemp(suffix=".xml", prefix="media-")
-        fileno_err, fname_err = mkstemp(suffix=".err", prefix="media-")
-        fp_out = os.fdopen(fileno_out, 'r+b')
-        fp_err = os.fdopen(fileno_err, 'r+b')
-        p = Popen(command, stdout=fp_out, stderr=fp_err, env=environment)
+        command = ["mediainfo", "-f", "--Output=XML", filename]
+        p = Popen(command, stdout=PIPE)
         p.wait()
-        fp_out.seek(0)
 
-        xml_dom = MediaInfo.parse_xml_data_into_dom(fp_out.read())
-        fp_out.close()
-        fp_err.close()
-        # Added os.remove because temp file wont erase ...
-        os.remove(fname_out)
-        os.remove(fname_err)
-        #
+        xml_dom = MediaInfo.parse_xml_data_into_dom(p.stdout.read())
+
+        p.stdout.close()
+
         return MediaInfo(xml_dom)
 
     def _populate_tracks(self):

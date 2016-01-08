@@ -7,7 +7,7 @@
 
 from config import *
 from common import *
-from upymediainfo import MediaInfo
+from pymediainfo import MediaInfo
 from encode import create_video_json_file
 
 import os
@@ -39,52 +39,52 @@ def get_site(site_name) :
     return site_name, site_id, site_enabled, vp_priority
 
 
-#def media_check(file) :
-#    """Checks a file with Mediainfo, to know if it is a video.
-#       Return isvideo, video_br, video_w, video_h, aspect_r, duration, size
-#    """
-#    logthis('Checking with MediaInfo: %s' % (file), stdout=0)
-#    media_info=MediaInfo.parse(file)
-#    # check mediainfo tracks
-#    for track in media_info.tracks:
-#        if track.track_type == 'Video':
-#            video_w=track.width
-#            video_h=track.height
-#            aspect_r=round(float(track.display_aspect_ratio),2)
-#            video_br=track.bit_rate
-#            video_f=track.format
-#        if track.track_type == 'General':
-#            total_br=track.overall_bit_rate
-#            duration=track.duration
-#            file_format=track.format
-#            size=track.file_size
-#        if track.track_type == 'Audio':
-#            audio_f=track.format
-#            audio_br=track.bit_rate
-#    # If there no video_br use the total_br
-#    if not vars().has_key('video_br'):
-#        video_br=total_br
-#    elif video_br is None :
-#        video_br=total_br
-#    # No audio meta?
-#    if not vars().has_key('audio_br'):
-#        audio_br=0
-#    elif audio_br is None :
-#        audio_br=0
-#    # No file format?
-#    if not vars().has_key('file_format'):
-#        file_format="none"
-#    # Check if its has overall bitrate and video width - we need it to choose video profiles
-#    if vars().has_key('video_br') and vars().has_key('video_w'):
-#        isvideo=True
-#    else :
-#        isvideo=False
-#        video_br, video_w, video_h, aspect_r, duration, size, total_br, audio_br=0,0,0,0,0,0,0,0
-#        video_f="none"
-#        audio_f="none"
-#        #
-#        logthis('%s : not enough metadata; %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s' % (file, video_br, video_w, video_h, aspect_r, duration, size, total_br, audio_br, video_f, audio_f, file_format), stdout=0)
-#    return isvideo, video_br, video_w, video_h, aspect_r, duration, size, total_br, audio_br, video_f, audio_f, file_format
+def media_check(file) :
+    """Checks a file with Mediainfo, to know if it is a video.
+       Return isvideo, video_br, video_w, video_h, aspect_r, duration, size
+    """
+    logthis('Checking with MediaInfo: %s' % (file), stdout=0)
+    media_info=MediaInfo.parse(file)
+    # check mediainfo tracks
+    for track in media_info.tracks:
+        if track.track_type == 'Video':
+            video_w=track.width
+            video_h=track.height
+            aspect_r=round(float(track.display_aspect_ratio),2)
+            video_br=track.bit_rate
+            video_f=track.format
+        if track.track_type == 'General':
+            total_br=track.overall_bit_rate
+            duration=track.duration
+            file_format=track.format
+            size=track.file_size
+        if track.track_type == 'Audio':
+            audio_f=track.format
+            audio_br=track.bit_rate
+    # If there no video_br use the total_br
+    if not vars().has_key('video_br'):
+        video_br=total_br
+    elif video_br is None :
+        video_br=total_br
+    # No audio meta?
+    if not vars().has_key('audio_br'):
+        audio_br=0
+    elif audio_br is None :
+        audio_br=0
+    # No file format?
+    if not vars().has_key('file_format'):
+        file_format="none"
+    # Check if its has overall bitrate and video width - we need it to choose video profiles
+    if vars().has_key('video_br') and vars().has_key('video_w'):
+        isvideo=True
+    else :
+        isvideo=False
+        video_br, video_w, video_h, aspect_r, duration, size, total_br, audio_br=0,0,0,0,0,0,0,0
+        video_f="none"
+        audio_f="none"
+        #
+        logthis('%s : not enough metadata; %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s' % (file, video_br, video_w, video_h, aspect_r, duration, size, total_br, audio_br, video_f, audio_f, file_format), stdout=0)
+    return isvideo, video_br, video_w, video_h, aspect_r, duration, size, total_br, audio_br, video_f, audio_f, file_format
 
 
 def create_vhash(c_file, c_site_name) :

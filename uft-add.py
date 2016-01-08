@@ -64,6 +64,7 @@ if vars().has_key('add') and vars().has_key('site_name') and vars().has_key('fil
     if add == 'file' :
         # Check metada to know if its a video
         isvideo, video_br, video_w, video_h, aspect_r, duration, size, total_br, audio_br, video_f, audio_f, file_format = media_check(file_full_path)
+        print isvideo, video_br, video_w, video_h, aspect_r, duration, size, total_br, audio_br, video_f, audio_f, file_format
         if isvideo == True :
             # Video hash
             vhash = create_vhash(file_name_only, site_name)
