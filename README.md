@@ -1,7 +1,7 @@
 
-THIS README IS BEING CREATED
+# THIS PROJECT IS DEPRECATED - It will be soon replaced by a new one, based on Python3, FFMPEG and MySQL.
 
-# UNATTENDED FFMPEG TRANSCODER                     
+## UNATTENDED FFMPEG TRANSCODER                     
 https://github.com/supermasita/uft             	     
 
 WORD OF WARNING: 
